@@ -1,0 +1,94 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+@import '@/uni_modules/uview-ui/theme.scss';
+
+/* 颜色变量 - Viralize 浅色主题 */
+
+/* 品牌主色 - 优雅的蓝紫色 */
+$viralize-primary: #667eea;
+$viralize-primary-light: #764ba2;
+$viralize-secondary: #f093fb;
+
+/* 行为相关颜色 */
+$uni-color-primary: $viralize-primary;
+$uni-color-success: #52c41a;
+$uni-color-warning: #faad14;
+$uni-color-error: #f5222d;
+
+/* 文字基本颜色 - 浅色主题 */
+$uni-text-color:#2c3e50; // 深色文字
+$uni-text-color-inverse:#ffffff; // 反色
+$uni-text-color-grey:#8c9cb0; // 辅助灰色
+$uni-text-color-placeholder: #b8c4d4;
+$uni-text-color-disable:#d1d9e6;
+$uni-text-color-secondary: #5a6c7d; // 次要文字
+
+/* 背景颜色 - 浅色主题 */
+$uni-bg-color:#ffffff;
+$uni-bg-color-grey:#f5f7fa;
+$uni-bg-color-hover:#e8ecf2; // 点击状态颜色
+$uni-bg-color-mask:rgba(0, 0, 0, 0.45); // 遮罩颜色
+$uni-bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); // 渐变背景
+
+/* 边框颜色 */
+$uni-border-color:#e1e8f0;
+
+/* 尺寸变量 */
+
+/* 文字尺寸 */
+$uni-font-size-sm:12px;
+$uni-font-size-base:14px;
+$uni-font-size-lg:16px;
+$uni-font-size-xl:18px;
+
+/* 图片尺寸 */
+$uni-img-size-sm:20px;
+$uni-img-size-base:26px;
+$uni-img-size-lg:40px;
+
+/* Border Radius */
+$uni-border-radius-sm: 4px;
+$uni-border-radius-base: 8px;
+$uni-border-radius-lg: 12px;
+$uni-border-radius-xl: 16px;
+$uni-border-radius-circle: 50%;
+
+/* 水平间距 */
+$uni-spacing-row-sm: 5px;
+$uni-spacing-row-base: 10px;
+$uni-spacing-row-lg: 15px;
+$uni-spacing-row-xl: 20px;
+
+/* 垂直间距 */
+$uni-spacing-col-sm: 4px;
+$uni-spacing-col-base: 8px;
+$uni-spacing-col-lg: 12px;
+$uni-spacing-col-xl: 16px;
+
+/* 透明度 */
+$uni-opacity-disabled: 0.4; // 组件禁用态的透明度
+
+/* 阴影 */
+$uni-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+$uni-shadow-base: 0 4px 16px rgba(0, 0, 0, 0.08);
+$uni-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+/* 文章场景相关 */
+$uni-color-title: #2C405A; // 文章标题颜色
+$uni-font-size-title:20px;
+$uni-color-subtitle: #5a6c7d; // 二级标题颜色
+$uni-font-size-subtitle:16px;
+$uni-color-paragraph: #3F536E; // 文章段落颜色
+$uni-font-size-paragraph:14px;
+

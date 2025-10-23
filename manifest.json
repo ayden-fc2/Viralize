@@ -1,0 +1,116 @@
+{
+    "name" : "Viralize",
+    "appid" : "__UNI__1CDD978",
+    "description" : "AI Video Generation",
+    "versionName" : "1.0.0",
+    "versionCode" : "100",
+    "transformPx" : false,
+    /* 5+App特有相关 */
+    "app-plus" : {
+        "safearea": {
+            "bottom": {
+                "offset": "none"
+            }
+        },
+        "usingComponents" : true,
+        "nvueStyleCompiler" : "uni-app",
+        "compilerVersion" : 3,
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : true,
+            "waiting" : true,
+            "autoclose" : true,
+            "delay" : 0
+        },
+        /* 模块配置 */
+        "modules" : {
+            "Camera" : {},
+            "OAuth" : {},
+            "VideoPlayer" : {}
+        },
+        /* 应用发布信息 */
+        "distribute" : {
+            /* android打包配置 */
+            "android" : {
+                "permissions" : [
+                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+                    "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+                    "<uses-feature android:name=\"android.hardware.camera\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                ]
+            },
+            /* ios打包配置 */
+            "ios" : {
+                "dSYMs" : false
+            },
+            /* SDK配置 */
+            "sdkConfigs" : {
+                "oauth" : {
+                    "apple" : {},
+                    "google" : {
+                        "clientid" : "385505120455-n0maojbmu6in9kvoqp0mrp1qa5b1df8v.apps.googleusercontent.com"
+                    }
+                }
+            }
+        },
+        "locales" : {
+            "en" : {
+                "ios" : {
+                    "privacyDescription" : {
+                        "NSPhotoLibraryUsageDescription" : "This app requires access to your photo library to upload product images for generating creative videos. It will not be used for any other purpose.",
+                        "NSPhotoLibraryAddUsageDescription" : "This app requires permission to save generated creative videos to your photo library. It will not be used for any other purpose.",
+                        "NSCameraUsageDescription" : "This app requires access to your camera to capture product photos needed for generating creative videos. It will not be used for any other purpose.",
+                        "NSMicrophoneUsageDescription" : "This app requires access to your microphone for recording audio while capturing product videos. It will not be used for any other purpose.",
+                        "NSFaceIDUsageDescription" : "This app requires Face ID access for Apple Sign-In. It will not be used for any other purpose.",
+                        "NSLocalNetworkUsageDescription" : "This app requires access to your local network to connect with the server. It will not be used for any other purpose."
+                    }
+                }
+            },
+            "zh" : {
+                "ios" : {
+                    "privacyDescription" : {
+                        "NSPhotoLibraryUsageDescription" : "应用需要该权限，用于上传生成创意视频所需的产品图片，不会用作其他用途",
+                        "NSPhotoLibraryAddUsageDescription" : "应用需要该权限，用于下载存储生成的创意视频，不会用作其他用途",
+                        "NSCameraUsageDescription" : "应用需要该权限用于下载存储生成的创意视频，不会用作其他用途",
+                        "NSMicrophoneUsageDescription" : "应用需要该权限，用于拍摄生成创意视频所需的产品照片，不会用作其他用途",
+                        "NSFaceIDUsageDescription" : "应用需要该权限，用于Apple登陆，不会用作其他用途",
+                        "NSLocalNetworkUsageDescription" : "应用需要该权限，用于与服务器建立连接，不会用作其他用途"
+                    }
+                }
+            }
+        }
+    },
+    /* 快应用特有相关 */
+    "quickapp" : {},
+    /* 小程序特有相关 */
+    "mp-weixin" : {
+        "appid" : "",
+        "setting" : {
+            "urlCheck" : false
+        },
+        "usingComponents" : true
+    },
+    "mp-alipay" : {
+        "usingComponents" : true
+    },
+    "mp-baidu" : {
+        "usingComponents" : true
+    },
+    "mp-toutiao" : {
+        "usingComponents" : true
+    },
+    "uniStatistics" : {
+        "enable" : false
+    },
+    "vueVersion" : "2"
+}
