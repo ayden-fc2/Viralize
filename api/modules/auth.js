@@ -32,20 +32,6 @@ export function uniLoginApi(openid, platform) {
 }
 
 /**
- * 更新账户信息
- */
-export function updateAccountInfoApi(data) {
-  return post('/user/update', data)
-}
-
-/**
- * 获取账户信息
- */
-export function getAccountInfoApi() {
-  return post('/user/get_user_info')
-}
-
-/**
  * 用户登出
  */
 export function logoutApi() {

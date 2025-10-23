@@ -73,7 +73,7 @@ export default {
         })
         .catch(err => {
           console.log('❌ Token 无效或未登录，准备跳转登录页', err)
-          this.$store.dispatch('user/clearAllUserInfo')
+          this.$store.dispatch('user/clearToken')
           this.navigationState = 1
           this.authCheckComplete = true
           this.proceedNext()
@@ -128,7 +128,7 @@ export default {
           console.warn('⚠️ 认证检查超时，直接跳转登录页')
           this.navigationState = 1
           this.authCheckComplete = true
-          this.$store.dispatch('user/clearAllUserInfo')
+          this.$store.dispatch('user/clearToken')
           this.proceedNext()
         }
       }, MAX_WAIT_TIME)

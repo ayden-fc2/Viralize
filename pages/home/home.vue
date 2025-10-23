@@ -5,9 +5,6 @@
         <swiper-item @touchmove.stop.prevent>
           <view class="tab-content">
             <u-status-bar></u-status-bar>
-            <view class="page-header">
-              <text class="page-title">{{ $t('home.tab1') }}</text>
-            </view>
             <view class="todo-placeholder">
               <text class="todo-text">TODO: {{ $t('home.tab1') }} 内容</text>
             </view>
@@ -17,9 +14,6 @@
         <swiper-item @touchmove.stop.prevent>
           <view class="tab-content">
             <u-status-bar></u-status-bar>
-            <view class="page-header">
-              <text class="page-title">{{ $t('home.tab2') }}</text>
-            </view>
             <view class="todo-placeholder">
               <text class="todo-text">TODO: {{ $t('home.tab2') }} 内容</text>
             </view>
@@ -27,19 +21,9 @@
         </swiper-item>
         
         <swiper-item @touchmove.stop.prevent>
-          <view class="tab-content">
+          <view class="tab-content-mine">
             <u-status-bar></u-status-bar>
-            <view class="page-header">
-              <text class="page-title">{{ $t('home.tab3') }}</text>
-            </view>
-            <view class="todo-placeholder">
-              <text class="todo-text">TODO: {{ $t('home.tab3') }} 内容</text>
-              
-              <!-- 添加退出登录按钮 -->
-              <view class="logout-section">
-                <button class="logout-btn" @click="handleLogout">退出登录</button>
-              </view>
-            </view>
+            <mine-tab></mine-tab>
           </view>
         </swiper-item>
       </swiper>
@@ -111,15 +95,19 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import MineTab from './tabs/mine.vue'
 
 export default {
+  components: {
+    MineTab
+  },
   data() {
     return {
       currentTabIndex: 0
     }
   },
   computed: {
-    ...mapGetters('user', ['token', 'userInfo', 'isLoggedIn'])
+    ...mapGetters('user', ['token', 'isLoggedIn'])
   },
   onLoad() {
     console.log('🏠 进入首页')
@@ -137,24 +125,6 @@ export default {
      */
     switchTabbar(index) {
       this.currentTabIndex = index
-    },
-    
-    /**
-     * 退出登录
-     */
-    handleLogout() {
-      uni.showModal({
-        title: '提示',
-        content: '确定要退出登录吗？',
-        success: (res) => {
-          if (res.confirm) {
-            this.$store.dispatch('user/logout')
-            uni.reLaunch({
-              url: '/pages/login/login'
-            })
-          }
-        }
-      })
     }
   }
 }
@@ -186,18 +156,8 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
-    
-    .page-header {
-      background: $uni-bg-color;
-      padding: 40rpx 40rpx 30rpx;
-      box-shadow: $uni-shadow-sm;
-      
-      .page-title {
-        font-size: 48rpx;
-        font-weight: 600;
-        color: $uni-text-color;
-      }
-    }
+    padding-bottom: 50px;  // 为 tabbar 留出空间
+    box-sizing: border-box;
     
     .todo-placeholder {
       flex: 1;
@@ -213,31 +173,16 @@ export default {
         text-align: center;
         margin-bottom: 60rpx;
       }
-      
-      .logout-section {
-        width: 100%;
-        max-width: 600rpx;
-        margin-top: 60rpx;
-        
-        .logout-btn {
-          width: 100%;
-          height: 88rpx;
-          background: linear-gradient(135deg, $viralize-primary 0%, $viralize-primary-light 100%);
-          color: $uni-text-color-inverse;
-          border: none;
-          border-radius: $uni-border-radius-lg;
-          font-size: 32rpx;
-          font-weight: 500;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          
-          &:active {
-            opacity: 0.9;
-          }
-        }
-      }
     }
+  }
+  
+  .tab-content-mine {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 50px;  // 为 tabbar 留出空间
+    box-sizing: border-box;
   }
 }
 

@@ -31,5 +31,18 @@
   "sms.loginSuccess": "ログイン成功",
   "home.tab1": "ホーム",
   "home.tab2": "プロジェクト",
-  "home.tab3": "設定"
+  "home.tab3": "設定",
+  "mine.userName": "Viralizeユーザー",
+  "mine.defaultName": "ゲスト",
+  "mine.defaultEmail": "guest@viralize.app",
+  "mine.terms": "利用規約",
+  "mine.privacy": "プライバシーポリシー",
+  "mine.language": "言語",
+  "mine.logout": "ログアウト",
+  "mine.logoutConfirm": "ログアウト",
+  "mine.logoutMessage": "ログアウトしてもよろしいですか？",
+  "lang.confirm": "確認",
+  "lang.confirmMessage": "言語を切り替えてアプリを再起動しますか？",
+  "lang.confirmBtn": "確認",
+  "lang.cancelBtn": "キャンセル"
 }

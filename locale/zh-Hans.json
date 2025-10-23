@@ -31,6 +31,19 @@
 	"sms.loginSuccess": "登录成功",
 	"home.tab1": "首页",
 	"home.tab2": "项目",
-	"home.tab3": "设置"
+	"home.tab3": "设置",
+	"mine.userName": "Viralize 用户",
+	"mine.defaultName": "游客",
+	"mine.defaultEmail": "guest@viralize.app",
+	"mine.terms": "服务条款",
+	"mine.privacy": "隐私政策",
+	"mine.language": "语言",
+	"mine.logout": "退出登录",
+	"mine.logoutConfirm": "退出登录",
+	"mine.logoutMessage": "确定要退出登录吗？",
+	"lang.confirm": "确认",
+	"lang.confirmMessage": "切换语言并重启应用？",
+	"lang.confirmBtn": "确认",
+	"lang.cancelBtn": "取消"
 }
   

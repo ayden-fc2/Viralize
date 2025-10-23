@@ -1,17 +1,14 @@
 /**
- * 用户状态管理
+ * 用户状态管理 - 只保留 token
  */
 const TOKEN_KEY = 'user-token'  // 与老应用保持一致
-const USER_INFO_KEY = 'userInfo'
 
 const state = {
-  token: uni.getStorageSync(TOKEN_KEY) || '',
-  userInfo: uni.getStorageSync(USER_INFO_KEY) || null
+  token: uni.getStorageSync(TOKEN_KEY) || ''
 }
 
 const getters = {
   token: state => state.token,
-  userInfo: state => state.userInfo,
   isLoggedIn: state => !!state.token
 }
 
@@ -25,20 +22,9 @@ const mutations = {
     }
   },
   
-  SET_USER_INFO(state, userInfo) {
-    state.userInfo = userInfo
-    if (userInfo) {
-      uni.setStorageSync(USER_INFO_KEY, userInfo)
-    } else {
-      uni.removeStorageSync(USER_INFO_KEY)
-    }
-  },
-  
-  CLEAR_USER_DATA(state) {
+  CLEAR_TOKEN(state) {
     state.token = ''
-    state.userInfo = null
     uni.removeStorageSync(TOKEN_KEY)
-    uni.removeStorageSync(USER_INFO_KEY)
   }
 }
 
@@ -48,19 +34,14 @@ const actions = {
     commit('SET_TOKEN', token)
   },
   
-  // 设置用户信息
-  setUserInfo({ commit }, userInfo) {
-    commit('SET_USER_INFO', userInfo)
-  },
-  
-  // 清除所有用户信息
-  clearAllUserInfo({ commit }) {
-    commit('CLEAR_USER_DATA')
+  // 清除 token
+  clearToken({ commit }) {
+    commit('CLEAR_TOKEN')
   },
   
   // 登出
   logout({ commit }) {
-    commit('CLEAR_USER_DATA')
+    commit('CLEAR_TOKEN')
   }
 }
 

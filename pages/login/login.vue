@@ -46,7 +46,6 @@
       :show="showSmsPopup" 
       @close="closeSmsPopup" 
       mode="bottom"
-      :round="20"
       :closeable="true"
       :closeOnClickOverlay="false"
     >
@@ -108,7 +107,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getPhoneCodeApi, phoneCodeLoginApi, updateAccountInfoApi } from '@/api/modules/auth'
+import { getPhoneCodeApi, phoneCodeLoginApi } from '@/api/modules/auth'
 
 const CODE_LENGTH = 6
 const COUNTDOWN_SECONDS = 60
@@ -351,16 +350,6 @@ export default {
           // 保存 token 到 store 和本地存储
           this.$store.dispatch('user/setToken', res.access_token)
           
-          // 更新用户信息
-          updateAccountInfoApi({
-            phone: this.phoneNumber
-          }).then(userInfo => {
-            console.log('更新用户信息成功:', userInfo)
-            this.$store.dispatch('user/setUserInfo', userInfo)
-          }).catch(err => {
-            console.error('更新用户信息失败:', err)
-          })
-          
           // 关闭弹窗并跳转
           this.closeSmsPopup()
           
@@ -550,7 +539,7 @@ export default {
 
 /* SMS 登录弹窗样式 */
 .sms-popup-content {
-  width: 750rpx !important;
+  width: 100vw !important;
   padding: 60rpx 40rpx 40rpx 40rpx;
   background: $uni-bg-color;
   border-radius: 20rpx;

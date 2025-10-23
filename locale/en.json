@@ -31,5 +31,18 @@
   "sms.loginSuccess": "Sign in successful",
   "home.tab1": "Home",
   "home.tab2": "Projects",
-  "home.tab3": "Settings"
+  "home.tab3": "Settings",
+  "mine.userName": "Viralize User",
+  "mine.defaultName": "Guest",
+  "mine.defaultEmail": "guest@viralize.app",
+  "mine.terms": "Terms of Service",
+  "mine.privacy": "Privacy Policy",
+  "mine.language": "Language",
+  "mine.logout": "Sign Out",
+  "mine.logoutConfirm": "Sign Out",
+  "mine.logoutMessage": "Are you sure you want to sign out?",
+  "lang.confirm": "Confirm",
+  "lang.confirmMessage": "Switch language and restart the app?",
+  "lang.confirmBtn": "Confirm",
+  "lang.cancelBtn": "Cancel"
 }

@@ -31,5 +31,18 @@
   "sms.loginSuccess": "登入成功",
   "home.tab1": "首頁",
   "home.tab2": "項目",
-  "home.tab3": "設置"
+  "home.tab3": "設置",
+  "mine.userName": "Viralize 用戶",
+  "mine.defaultName": "訪客",
+  "mine.defaultEmail": "guest@viralize.app",
+  "mine.terms": "服務條款",
+  "mine.privacy": "隱私政策",
+  "mine.language": "語言",
+  "mine.logout": "退出登入",
+  "mine.logoutConfirm": "退出登入",
+  "mine.logoutMessage": "確定要退出登入嗎？",
+  "lang.confirm": "確認",
+  "lang.confirmMessage": "切換語言並重啟應用？",
+  "lang.confirmBtn": "確認",
+  "lang.cancelBtn": "取消"
 }
