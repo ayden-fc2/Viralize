@@ -90,7 +90,7 @@
           
           <view 
             class="resend-link" 
-            :class="countdown > 0 ? 'disabled' : ''"
+            :class="countdown > 0 || isSpecialAccount(phoneNumber) ? 'disabled' : ''"
             @click="resendCode"
           >
             {{ countdown > 0 ? $t('sms.resendCountdown').replace('{countdown}', countdown) : $t('sms.resendCode') }}
@@ -232,6 +232,18 @@ export default {
         return
       }
       
+      // 测试账号直接跳到验证码输入页面，不调用 API
+      if (this.isSpecialAccount(this.phoneNumber)) {
+        console.log('测试账号，跳过 API 调用')
+        this.smsStep = 2
+        this.startCountdown()
+        uni.showToast({
+          title: this.$t('sms.codeSent'),
+          icon: 'success'
+        })
+        return
+      }
+      
       uni.showLoading({
         title: this.$t('sms.sending'),
         mask: true
@@ -277,6 +289,15 @@ export default {
      */
     resendCode() {
       if (this.countdown > 0) {
+        return
+      }
+      
+      // 测试账号不允许重新发送
+      if (this.isSpecialAccount(this.phoneNumber)) {
+        uni.showToast({
+          title: '测试账号无需重新发送',
+          icon: 'none'
+        })
         return
       }
       

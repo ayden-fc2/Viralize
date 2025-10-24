@@ -34,11 +34,11 @@ function request(options) {
           uni.removeStorageSync('token')
           console.warn('认证失败，跳转到登录页面')
           uni.reLaunch({
-            url: '/pages/login/login'
+            url: '/pages/hello/hello'
           })
           reject({
             code: 401,
-            message: 'Token 已失效'
+            message: 'Invalid Token'
           })
         } else {
           reject({

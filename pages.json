@@ -35,6 +35,20 @@
 				"navigationStyle": "custom"
 				
 			}
+		},
+		{
+			"path": "pages/editor/editor",
+			"style": {
+				"navigationBarTitleText": "编辑",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/IdeaParts/IdeaParts",
+			"style": {
+				"navigationBarTitleText": "生成",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {

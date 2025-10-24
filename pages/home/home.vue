@@ -5,18 +5,7 @@
         <swiper-item @touchmove.stop.prevent>
           <view class="tab-content">
             <u-status-bar></u-status-bar>
-            <view class="todo-placeholder">
-              <text class="todo-text">TODO: {{ $t('home.tab1') }} 内容</text>
-            </view>
-          </view>
-        </swiper-item>
-        
-        <swiper-item @touchmove.stop.prevent>
-          <view class="tab-content">
-            <u-status-bar></u-status-bar>
-            <view class="todo-placeholder">
-              <text class="todo-text">TODO: {{ $t('home.tab2') }} 内容</text>
-            </view>
+            <create-tab></create-tab>
           </view>
         </swiper-item>
         
@@ -53,34 +42,17 @@
           ></image>
         </u-tabbar-item>
         
-        <u-tabbar-item :text="$t('home.tab2')" @click="switchTabbar(1)">
+        <u-tabbar-item :text="$t('home.tab3')" @click="switchTabbar(1)">
           <image
             class="tab-icon"
             :class="currentTabIndex === 1 ? 'tab-icon-active' : 'tab-icon-inactive'"
-            mode="aspectFit"
-            slot="active-icon"
-            src="/static/folder-fill.svg"
-          ></image>
-          <image
-            class="tab-icon"
-            :class="currentTabIndex === 1 ? 'tab-icon-active' : 'tab-icon-inactive'"
-            mode="aspectFit"
-            slot="inactive-icon"
-            src="/static/folder.svg"
-          ></image>
-        </u-tabbar-item>
-        
-        <u-tabbar-item :text="$t('home.tab3')" @click="switchTabbar(2)">
-          <image
-            class="tab-icon"
-            :class="currentTabIndex === 2 ? 'tab-icon-active' : 'tab-icon-inactive'"
             mode="aspectFit"
             slot="active-icon"
             src="/static/user-Fill.svg"
           ></image>
           <image
             class="tab-icon"
-            :class="currentTabIndex === 2 ? 'tab-icon-active' : 'tab-icon-inactive'"
+            :class="currentTabIndex === 1 ? 'tab-icon-active' : 'tab-icon-inactive'"
             mode="aspectFit"
             slot="inactive-icon"
             src="/static/user.svg"
@@ -95,10 +67,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import CreateTab from './tabs/create.vue'
 import MineTab from './tabs/mine.vue'
 
 export default {
   components: {
+    CreateTab,
     MineTab
   },
   data() {
@@ -158,6 +132,7 @@ export default {
     flex-direction: column;
     padding-bottom: 50px;  // 为 tabbar 留出空间
     box-sizing: border-box;
+    overflow-y: auto;  // 允许滚动
     
     .todo-placeholder {
       flex: 1;
@@ -171,7 +146,6 @@ export default {
         font-size: 32rpx;
         color: $uni-text-color-grey;
         text-align: center;
-        margin-bottom: 60rpx;
       }
     }
   }
