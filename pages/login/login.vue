@@ -168,7 +168,7 @@ export default {
      * 打开服务条款
      */
     openTerms() {
-      const url = 'https://genshot.ai/terms'
+      const url = 'https://productphotography.video/terms'
       const title = this.$t('login.terms')
       uni.navigateTo({
         url: `/pages/webview/webview?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`
@@ -179,7 +179,7 @@ export default {
      * 打开隐私政策
      */
     openPrivacy() {
-      const url = 'https://genshot.ai/privacy'
+      const url = 'https://productphotography.video/privacy'
       const title = this.$t('login.privacy')
       uni.navigateTo({
         url: `/pages/webview/webview?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`
