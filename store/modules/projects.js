@@ -19,37 +19,17 @@ export const PROJECT_STATUS = {
 // Demo 项目数据
 const DEMO_PROJECTS = [
   {
-    "id": "demo_1760707380430_82ahzzxe2",
-    "product_image_url": "https://genstyle.net/fe/1760707377548_ygi8z9a7c.png",
-    "scene_image_url": "https://agent-1316760375.cos.accelerate.myqcloud.com/genshot_images/c6fa01b4.jpg",
-    "desc": "Close-up on the kettle's smooth metallic body as soft light reflects across its surface.",
-    "dialog": "Redefine simplicity. Boil smarter. Live sleeker.",
-    "video_url": "https://agent-1316760375.cos.accelerate.myqcloud.com/genshot_videos/494e8228.mp4",
-    "status": "completed",
-    "date": "2025-10-17",
-    "created_at": 1760707380430
-  },
-  {
-    "id": "demo_1760707889631_cuag9o6uj",
-    "product_image_url": "https://genstyle.net/fe/1760707864690_c4x14gftt.png",
-    "scene_image_url": "https://agent-1316760375.cos.accelerate.myqcloud.com/genshot_images/605604c8.jpg",
-    "desc": "A sleek umbrella opens in slow motion against a gray city backdrop.",
-    "dialog": "Stay sharp. Stay dry. Designed for the modern rain.",
-    "video_url": "https://agent-1316760375.cos.accelerate.myqcloud.com/genshot_videos/b42dd646.mp4",
-    "status": "completed",
-    "date": "2025-10-17",
-    "created_at": 1760707889631
-  },
-  {
-    "id": "demo_1760707566269_o6lj0ta45",
-    "product_image_url": "https://genstyle.net/fe/1760707562296_sqg7iqkxl.png",
-    "scene_image_url": "https://agent-1316760375.cos.accelerate.myqcloud.com/genshot_images/84eada0d.jpg",
-    "desc": "A minimalist video that blends the warmth of handcrafted ceramic.",
-    "dialog": "Sip your story, one ceramic moment at a time.",
-    "video_url": "https://agent-1316760375.cos.accelerate.myqcloud.com/genshot_videos/92fba3bc.mp4",
-    "status": "completed",
-    "date": "2025-10-17",
-    "created_at": 1760707566269
+    "id": "demo_1761287197120_t8qgwuwu9",
+    "product_image_url": "https://genstyle.net/fe/1761287195515_oom5k7i84.png",
+    "scene_image_url": "https://agent-1316760375.cos.accelerate.myqcloud.com/genshot_images/e0637343.jpg",
+    "scene_pending_id": "",
+    "desc": "In a dim café corner, a man taps his new smartphone — the screen lights up, seamlessly unlocking and switching between work, photos, and messages; reflections of city lights ripple across the glass as he smiles, capturing a perfect moment that blends tech and life effortlessly.",
+    "dialog": "LumaPhone — smarter, faster, effortlessly yours.",
+    "video_url": "https://agent-1316760375.cos.accelerate.myqcloud.com/genshot_videos/264acc84.mp4",
+    "video_pending_id": "",
+    "status": "video_completed",
+    "date": "2025-10-24",
+    "created_at": 1761287197120
   }
 ]
 

@@ -42,6 +42,19 @@
           >
             <u-icon slot="icon" name="chat" size="20" color="#667eea"></u-icon>
           </u-cell>
+          <u-cell
+            @click="onRemoveAccountTap"
+            :border="false"
+            size="large"
+            :title="$t('mine.deleteAccount')"
+            isLink
+            :titleStyle="{
+              color: '#f5222d',
+              fontWeight: '500',
+            }"
+          >
+            <u-icon slot="icon" name="trash" size="20" color="#f5222d"></u-icon>
+          </u-cell>
         </u-cell-group>
       </view>
     </view>
@@ -109,6 +122,49 @@ export default {
     onLanguageTap() {
       uni.navigateTo({
         url: '/pages/lang/lang'
+      })
+    },
+    
+    /**
+     * 删除账户
+     */
+    onRemoveAccountTap() {
+      uni.showModal({
+        title: this.$t('mine.deleteAccountTitle'),
+        content: this.$t('mine.deleteAccountMessage'),
+        confirmText: this.$t('mine.deleteAccountConfirm'),
+        cancelText: this.$t('mine.deleteAccountCancel'),
+        confirmColor: '#f5222d',
+        success: (res) => {
+          if (res.confirm) {
+            uni.showLoading({
+              title: this.$t('common.loading'),
+              mask: true
+            })
+            
+            // 延迟处理，给用户反馈
+            setTimeout(() => {
+              // 清除所有 Vuex 数据
+              this.$store.dispatch('user/logout')
+              this.$store.dispatch('projects/clearAllProjects')
+              
+              uni.hideLoading()
+              
+              uni.showToast({
+                title: this.$t('mine.deleteAccountSuccess'),
+                icon: 'success',
+                duration: 2000
+              })
+              
+              // 跳转到登录页
+              setTimeout(() => {
+                uni.reLaunch({
+                  url: '/pages/hello/hello'
+                })
+              }, 2000)
+            }, 500)
+          }
+        }
       })
     },
     

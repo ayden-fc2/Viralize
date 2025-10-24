@@ -4,7 +4,7 @@
 
 // 默认配置 - 与老应用保持一致
 const IS_DEV = process.env.NODE_ENV === 'development'
-const BASE_URL = IS_DEV ? 'https://genshot.ai/agent_dev/api/v1' : 'https://genshot.ai/agent_dev/api/v1'
+const BASE_URL = IS_DEV ? 'https://genshot.ai/agent/api/v1' : 'https://genshot.ai/agent/api/v1'
 const TIMEOUT = 100000
 
 /**

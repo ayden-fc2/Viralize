@@ -74,12 +74,12 @@
     </view>
     
     <!-- 视频播放弹窗 -->
-    <view v-if="previewVisible" class="video-modal-overlay" @click="hidePreview">
-      <view class="video-modal-container" @click.stop>
-        <view class="video-modal-header">
-          <text class="video-modal-title">{{ $t('ideaParts.videoPreview') }}</text>
-          <view class="video-close-button" @click="hidePreview">
-            <u-icon name="close" size="22" color="#fff"></u-icon>
+    <view v-if="previewVisible" class="modal-overlay" @click="hidePreview">
+      <view class="modal-box" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title"></text>
+          <view class="close-btn" @click="hidePreview">
+            <u-icon name="close" size="20" color="#fff"></u-icon>
           </view>
         </view>
         <video 
@@ -87,12 +87,12 @@
           ref="videoPlayer"
           :src="mediaData.videoUrl" 
           :poster="mediaData.imageUrl"
-          class="video-player-element"
+          :direction="-90"
+          class="modal-video"
           controls
           :show-center-play-btn="true"
           :enable-play-gesture="true"
-          :initial-time="0"
-          objectFit="contain"
+          @fullscreenchange="onFullscreenChange"
         ></video>
       </view>
     </view>
@@ -105,6 +105,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { PROJECT_STATUS } from '@/store/modules/projects'
 import { genVideoApi, getVideoApi, genImageApi, getImageApi } from '@/api/modules/onestep'
+import { downloadVideo } from '@/utils/videoUtil'
 import Step1GenerateScene from './components/Step1GenerateScene.vue'
 import Step2EditContent from './components/Step2EditContent.vue'
 import Step3GenerateVideo from './components/Step3GenerateVideo.vue'
@@ -230,11 +231,29 @@ export default {
           this.maxUnlockedStep = 2
           this.currentStepIndex = 2
           console.log('🎬 项目已有视频，跳转到步骤3')
+        } else if (project.video_pending_id) {
+          // 视频生成中，解锁并跳到步骤3，恢复轮询
+          this.maxUnlockedStep = 2
+          this.currentStepIndex = 2
+          this.loading = true
+          this.statusText = this.$t('ideaParts.generatingVideo') + '...'
+          this.taskDetail = { id: project.video_pending_id }
+          this.startVideoCheck()
+          console.log('🎬 视频生成中，恢复轮询任务:', project.video_pending_id)
         } else {
           // 跳到步骤2编辑内容
           this.currentStepIndex = 1
           console.log('📝 场景图已生成，跳转到步骤2')
         }
+      } else if (project.scene_pending_id) {
+        // 场景图生成中，停留在步骤1，恢复轮询
+        this.currentStepIndex = 0
+        this.maxUnlockedStep = 0
+        this.loading = true
+        this.statusText = this.$t('common.loading')
+        this.sceneDetail = { id: project.scene_pending_id }
+        this.startSceneCheck()
+        console.log('🎨 场景图生成中，恢复轮询任务:', project.scene_pending_id)
       } else if (project.product_image_url) {
         // 只有产品图片，停留在步骤1
         this.currentStepIndex = 0
@@ -342,26 +361,57 @@ export default {
           videoContext.pause()
         }
         this.previewVisible = false
+        
+        // #ifdef APP-PLUS
+        // 恢复竖屏锁定
+        plus.screen.lockOrientation('portrait-primary')
+        // #endif
+      },
+      
+      onFullscreenChange(e) {
+        console.log('全屏状态变化:', e)
+        // #ifdef APP-PLUS
+        if (!e.detail.fullScreen) {
+          console.log('退出全屏，锁定竖屏并关闭弹窗')
+          plus.screen.lockOrientation('portrait-primary')
+          this.hidePreview()
+        }
+        // #endif
       },
     
     async onDownloadTap() {
-      // TODO: 实现下载功能
-      uni.showToast({
-        title: this.$t('common.opSuccess'),
-        icon: 'success'
-      })
+      await downloadVideo(this.mediaData.videoUrl, this.$t.bind(this))
     },
     
       onGenerateTap() {
-        if (!this.canGenerateVideo) {
-          if (this.isDemo) {
-            uni.showToast({
-              title: this.$t('ideaParts.demoNotAllowed'),
-              icon: 'none'
-            })
-          }
+        // Demo 项目不允许生成
+        if (this.isDemo) {
+          uni.showToast({
+            title: this.$t('ideaParts.demoNotAllowed'),
+            icon: 'none'
+          })
           return
         }
+        
+        // 如果正在加载中，不允许重新生成
+        if (this.loading) {
+          uni.showToast({
+            title: this.$t('ideaParts.generating'),
+            icon: 'none'
+          })
+          return
+        }
+        
+        // 如果没有场景图，不允许生成
+        if (!this.mediaData.imageUrl) {
+          uni.showToast({
+            title: this.$t('ideaParts.stepLocked'),
+            icon: 'none'
+          })
+          return
+        }
+        
+        // 允许生成或重新生成视频
         this.createVideo()
       },
     
@@ -608,6 +658,18 @@ export default {
      * 完成步骤1 - 生成分镜图
      */
     completeStep1() {
+      // 检查是否有正在生成的场景图任务
+      const project = this.currentProject
+      if (project && project.scene_pending_id && !project.scene_image_url) {
+        // 有场景图生成任务ID但没有场景图URL，说明正在生成中
+        console.log('🎨 检测到场景图生成中，恢复轮询任务:', project.scene_pending_id)
+        this.loading = true
+        this.statusText = this.$t('common.loading')
+        this.sceneDetail = { id: project.scene_pending_id }
+        this.startSceneCheck()
+        return
+      }
+      
       if (!this.mediaData.imageUrl || this.loading) {
         return
       }
@@ -630,6 +692,17 @@ export default {
         this.maxUnlockedStep = 2
       }
       
+      // 检查是否有正在生成的视频任务
+      const project = this.currentProject
+      if (project && project.video_pending_id && !project.video_url) {
+        // 有视频生成任务ID但没有视频URL，说明正在生成中
+        console.log('🎬 检测到视频生成中，恢复轮询任务:', project.video_pending_id)
+        this.loading = true
+        this.statusText = this.$t('ideaParts.generatingVideo') + '...'
+        this.taskDetail = { id: project.video_pending_id }
+        this.startVideoCheck()
+      }
+      
       // 跳转到步骤3
       this.currentStepIndex = 2
     },
@@ -644,6 +717,17 @@ export default {
           title: this.$t('common.opFail'),
           icon: 'none'
         })
+        return
+      }
+      
+      // 检查是否有正在生成的场景图任务
+      if (project.scene_pending_id && !project.scene_image_url) {
+        // 有任务正在进行，恢复轮询而不是重新生成
+        console.log('🎨 检测到场景图生成中，恢复轮询任务:', project.scene_pending_id)
+        this.loading = true
+        this.statusText = this.$t('common.loading')
+        this.sceneDetail = { id: project.scene_pending_id }
+        this.startSceneCheck()
         return
       }
       
@@ -836,6 +920,7 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   background: linear-gradient(180deg, #f0f4f8 0%, #e8eef3 100%);
   overflow: hidden;
 }
@@ -1185,65 +1270,67 @@ export default {
 // 以下是旧样式，已由组件样式替代，保留仅用于兼容
 // ============================================
 
-// 视频播放弹窗
-.video-modal-overlay {
+// 视频播放弹窗（参考老版本）
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  padding: 40rpx;
-}
-
-.video-modal-container {
-  width: 100%;
-  max-width: 750rpx;
-  background: #000;
-  border-radius: 24rpx;
-  overflow: hidden;
-  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.5);
-}
-
-.video-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 32rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.video-modal-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.video-close-button {
-  width: 60rpx;
-  height: 60rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  transition: all 0.3s;
   
-  &:active {
-    transform: scale(0.9);
-    background: rgba(255, 255, 255, 0.3);
+  .modal-box {
+    width: 90%;
+    max-width: 600px;
+    background: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      background: rgba(255, 255, 255, 0.05);
+      
+      .modal-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+      }
+      
+      .close-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: scale(1.1);
+        }
+        
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+    
+    .modal-video {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      background: #000;
+    }
   }
-}
-
-.video-player-element {
-  width: 100%;
-  height: 70vh;
-  max-height: 1000rpx;
-  background: #000;
 }
 
 // Textarea 样式覆盖
