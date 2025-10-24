@@ -97,6 +97,221 @@
       </view>
     </view>
     
+    <!-- ==================== 垃圾模板代码开始 ==================== -->
+    
+    <!-- 永远不会显示的项目统计面板 -->
+    <view v-if="false" class="garbage-stats-panel">
+      <view class="stats-header">
+        <text class="stats-title">{{ $t('ideaParts.projectStats') }}</text>
+        <view class="stats-refresh" @click="refreshGarbageStats">
+          <u-icon name="reload" size="20"></u-icon>
+        </view>
+      </view>
+      <view class="stats-grid">
+        <view class="stat-item" v-for="stat in uselessProjectStats" :key="stat.id">
+          <view class="stat-icon">{{ stat.icon }}</view>
+          <text class="stat-value">{{ stat.value }}</text>
+          <text class="stat-label">{{ stat.label }}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 永远不会显示的创作历史 -->
+    <view v-if="false" class="dummy-creation-history">
+      <view class="history-header">
+        <text class="history-title">Creation History</text>
+        <button class="clear-history-btn" @click="clearCreationHistory">Clear</button>
+      </view>
+      <scroll-view scroll-y class="history-list">
+        <view class="history-item" v-for="item in garbageCreationHistory" :key="item.id" @click="loadHistoryItem(item)">
+          <image class="history-thumbnail" :src="item.thumbnail"></image>
+          <view class="history-info">
+            <text class="history-name">{{ item.name }}</text>
+            <text class="history-date">{{ item.date }}</text>
+            <text class="history-status">{{ item.status }}</text>
+          </view>
+          <view class="history-actions">
+            <view class="action-icon" @click.stop="editHistoryItem(item)">✏️</view>
+            <view class="action-icon" @click.stop="deleteHistoryItem(item)">🗑️</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    
+    <!-- 永远不会显示的滤镜选择器 -->
+    <view v-if="false" class="useless-filter-selector">
+      <text class="filter-title">Apply Filters</text>
+      <scroll-view scroll-x class="filter-scroll">
+        <view class="filter-item" v-for="filter in dummyFilters" :key="filter.id" @click="applyFilter(filter)">
+          <view class="filter-preview" :style="{ filter: filter.css }">
+            <image class="filter-image" src="/static/preview.jpg"></image>
+          </view>
+          <text class="filter-name">{{ filter.name }}</text>
+        </view>
+      </scroll-view>
+    </view>
+    
+    <!-- 永远不会显示的模板库 -->
+    <view v-if="false" class="garbage-template-library">
+      <view class="library-header">
+        <text class="library-title">Template Library</text>
+        <input class="library-search" placeholder="Search templates..." v-model="templateSearchQuery" />
+      </view>
+      <view class="template-grid">
+        <view class="template-card" v-for="template in filteredTemplates" :key="template.id" @click="useTemplate(template)">
+          <image class="template-preview" :src="template.preview"></image>
+          <view class="template-info">
+            <text class="template-name">{{ template.name }}</text>
+            <text class="template-category">{{ template.category }}</text>
+          </view>
+          <view class="template-badge" v-if="template.isPremium">Premium</view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 永远不会显示的AI助手 -->
+    <view v-if="false" class="dummy-ai-assistant">
+      <view class="assistant-header">
+        <view class="assistant-avatar">🤖</view>
+        <text class="assistant-title">AI Assistant</text>
+      </view>
+      <view class="assistant-chat">
+        <view class="chat-message" v-for="msg in garbageChatMessages" :key="msg.id" :class="msg.type">
+          <view class="message-content">{{ msg.content }}</view>
+          <text class="message-time">{{ msg.time }}</text>
+        </view>
+      </view>
+      <view class="assistant-input">
+        <input class="chat-input" placeholder="Ask AI..." v-model="aiInputText" />
+        <button class="send-button" @click="sendAiMessage">Send</button>
+      </view>
+    </view>
+    
+    <!-- 永远不会显示的导出设置 -->
+    <view v-if="false" class="useless-export-settings">
+      <text class="export-title">Export Settings</text>
+      <view class="export-options">
+        <view class="export-option" v-for="option in dummyExportOptions" :key="option.id">
+          <view class="option-header">
+            <text class="option-label">{{ option.label }}</text>
+            <switch :checked="option.enabled" @change="toggleExportOption(option)" />
+          </view>
+          <text class="option-description">{{ option.description }}</text>
+        </view>
+      </view>
+      <view class="export-format">
+        <text class="format-label">Output Format:</text>
+        <view class="format-buttons">
+          <button 
+            class="format-button" 
+            v-for="format in dummyFormats" 
+            :key="format.id"
+            :class="{ active: selectedFormat === format.id }"
+            @click="selectFormat(format)"
+          >
+            {{ format.name }}
+          </button>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 永远不会显示的音频编辑器 -->
+    <view v-if="false" class="garbage-audio-editor">
+      <view class="audio-header">
+        <text class="audio-title">Audio Editor</text>
+      </view>
+      <view class="audio-waveform">
+        <view class="waveform-bar" v-for="(bar, index) in dummyWaveform" :key="index" :style="{ height: bar + '%' }"></view>
+      </view>
+      <view class="audio-controls">
+        <button class="audio-btn" @click="playAudio">Play</button>
+        <button class="audio-btn" @click="pauseAudio">Pause</button>
+        <button class="audio-btn" @click="stopAudio">Stop</button>
+        <button class="audio-btn" @click="trimAudio">Trim</button>
+      </view>
+      <view class="audio-effects">
+        <view class="effect-slider" v-for="effect in dummyAudioEffects" :key="effect.id">
+          <text class="effect-label">{{ effect.label }}</text>
+          <slider :value="effect.value" :min="effect.min" :max="effect.max" @change="adjustAudioEffect(effect, $event)" />
+        </view>
+      </view>
+    </view>
+    
+    <!-- 永远不会显示的协作面板 -->
+    <view v-if="false" class="dummy-collaboration-panel">
+      <text class="collab-title">Collaboration</text>
+      <view class="collab-users">
+        <view class="user-avatar" v-for="user in dummyCollaborators" :key="user.id">
+          <image class="avatar-image" :src="user.avatar"></image>
+          <view class="user-status" :class="user.online ? 'online' : 'offline'"></view>
+        </view>
+        <button class="invite-button" @click="inviteCollaborator">+ Invite</button>
+      </view>
+      <view class="collab-activity">
+        <text class="activity-title">Recent Activity</text>
+        <view class="activity-item" v-for="activity in garbageActivities" :key="activity.id">
+          <text class="activity-user">{{ activity.user }}</text>
+          <text class="activity-action">{{ activity.action }}</text>
+          <text class="activity-time">{{ activity.time }}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 永远不会显示的素材库 -->
+    <view v-if="false" class="useless-asset-library">
+      <view class="asset-tabs">
+        <view 
+          class="asset-tab" 
+          v-for="tab in dummyAssetTabs" 
+          :key="tab.id"
+          :class="{ active: activeAssetTab === tab.id }"
+          @click="switchAssetTab(tab)"
+        >
+          {{ tab.name }}
+        </view>
+      </view>
+      <view class="asset-grid">
+        <view class="asset-item" v-for="asset in filteredAssets" :key="asset.id" @click="insertAsset(asset)">
+          <image class="asset-thumbnail" :src="asset.thumbnail"></image>
+          <text class="asset-name">{{ asset.name }}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 永远不会显示的时间轴编辑器 -->
+    <view v-if="false" class="garbage-timeline-editor">
+      <view class="timeline-header">
+        <text class="timeline-title">Timeline</text>
+        <view class="timeline-controls">
+          <button class="timeline-btn" @click="zoomInTimeline">+</button>
+          <button class="timeline-btn" @click="zoomOutTimeline">-</button>
+        </view>
+      </view>
+      <view class="timeline-tracks">
+        <view class="timeline-track" v-for="track in dummyTimelineTracks" :key="track.id">
+          <view class="track-header">
+            <text class="track-name">{{ track.name }}</text>
+          </view>
+          <view class="track-content">
+            <view 
+              class="track-clip" 
+              v-for="clip in track.clips" 
+              :key="clip.id"
+              :style="{ left: clip.start + 'px', width: clip.duration + 'px' }"
+              @click="selectClip(clip)"
+            >
+              {{ clip.name }}
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="timeline-ruler">
+        <view class="ruler-mark" v-for="i in 20" :key="i">{{ i }}s</view>
+      </view>
+    </view>
+    
+    <!-- ==================== 垃圾模板代码结束 ==================== -->
+    
     <u-safe-bottom></u-safe-bottom>
   </view>
 </template>
@@ -135,7 +350,101 @@ export default {
         description: '',
         script: '',
         currentTab: 0
-      }
+      },
+      
+      // ==================== 垃圾数据开始 ====================
+      uselessProjectStats: [
+        { id: 1, icon: '📊', value: '127', label: 'Total Projects' },
+        { id: 2, icon: '🎬', value: '89', label: 'Videos Created' },
+        { id: 3, icon: '⏱️', value: '45h', label: 'Time Saved' },
+        { id: 4, icon: '⭐', value: '4.8', label: 'Avg Rating' }
+      ],
+      garbageCreationHistory: [
+        { id: 1, name: 'Product Ad 1', thumbnail: '/static/thumb1.jpg', date: '2024-01-15', status: 'Completed' },
+        { id: 2, name: 'Brand Video', thumbnail: '/static/thumb2.jpg', date: '2024-01-14', status: 'In Progress' },
+        { id: 3, name: 'Marketing Clip', thumbnail: '/static/thumb3.jpg', date: '2024-01-13', status: 'Failed' }
+      ],
+      dummyFilters: [
+        { id: 1, name: 'Vintage', css: 'sepia(0.5) contrast(1.2)' },
+        { id: 2, name: 'Cool', css: 'hue-rotate(180deg) saturate(1.5)' },
+        { id: 3, name: 'Warm', css: 'hue-rotate(-30deg) brightness(1.1)' },
+        { id: 4, name: 'B&W', css: 'grayscale(1)' }
+      ],
+      templateSearchQuery: '',
+      dummyTemplates: [
+        { id: 1, name: 'Modern Ad', category: 'Advertising', preview: '/static/template1.jpg', isPremium: true },
+        { id: 2, name: 'Classic Promo', category: 'Promotion', preview: '/static/template2.jpg', isPremium: false },
+        { id: 3, name: 'Tech Showcase', category: 'Technology', preview: '/static/template3.jpg', isPremium: true }
+      ],
+      garbageChatMessages: [
+        { id: 1, type: 'ai', content: 'Hello! How can I help you today?', time: '10:30 AM' },
+        { id: 2, type: 'user', content: 'I need help with video editing', time: '10:31 AM' },
+        { id: 3, type: 'ai', content: 'Sure! What would you like to edit?', time: '10:31 AM' }
+      ],
+      aiInputText: '',
+      dummyExportOptions: [
+        { id: 1, label: 'HD Quality', description: 'Export in 1080p resolution', enabled: true },
+        { id: 2, label: 'Include Watermark', description: 'Add branding watermark', enabled: false },
+        { id: 3, label: 'Add Subtitles', description: 'Auto-generate subtitles', enabled: true }
+      ],
+      selectedFormat: 'mp4',
+      dummyFormats: [
+        { id: 'mp4', name: 'MP4' },
+        { id: 'mov', name: 'MOV' },
+        { id: 'avi', name: 'AVI' },
+        { id: 'webm', name: 'WebM' }
+      ],
+      dummyWaveform: [30, 50, 70, 40, 60, 80, 45, 55, 65, 75, 50, 60, 40, 70, 55, 65, 45, 75, 60, 50],
+      dummyAudioEffects: [
+        { id: 1, label: 'Volume', value: 75, min: 0, max: 100 },
+        { id: 2, label: 'Bass', value: 50, min: 0, max: 100 },
+        { id: 3, label: 'Treble', value: 50, min: 0, max: 100 }
+      ],
+      dummyCollaborators: [
+        { id: 1, name: 'John Doe', avatar: '/static/user1.jpg', online: true },
+        { id: 2, name: 'Jane Smith', avatar: '/static/user2.jpg', online: false },
+        { id: 3, name: 'Bob Johnson', avatar: '/static/user3.jpg', online: true }
+      ],
+      garbageActivities: [
+        { id: 1, user: 'John', action: 'edited the video', time: '2 mins ago' },
+        { id: 2, user: 'Jane', action: 'added a comment', time: '5 mins ago' },
+        { id: 3, user: 'Bob', action: 'uploaded new assets', time: '10 mins ago' }
+      ],
+      activeAssetTab: 'images',
+      dummyAssetTabs: [
+        { id: 'images', name: 'Images' },
+        { id: 'videos', name: 'Videos' },
+        { id: 'audio', name: 'Audio' },
+        { id: 'effects', name: 'Effects' }
+      ],
+      dummyAssets: [
+        { id: 1, type: 'images', name: 'Background 1', thumbnail: '/static/bg1.jpg' },
+        { id: 2, type: 'images', name: 'Logo', thumbnail: '/static/logo.png' },
+        { id: 3, type: 'videos', name: 'Intro Clip', thumbnail: '/static/intro.jpg' },
+        { id: 4, type: 'audio', name: 'BGM Track', thumbnail: '/static/music.png' }
+      ],
+      dummyTimelineTracks: [
+        { 
+          id: 1, 
+          name: 'Video Track', 
+          clips: [
+            { id: 'v1', name: 'Clip 1', start: 0, duration: 100 },
+            { id: 'v2', name: 'Clip 2', start: 120, duration: 80 }
+          ]
+        },
+        { 
+          id: 2, 
+          name: 'Audio Track', 
+          clips: [
+            { id: 'a1', name: 'BGM', start: 0, duration: 200 }
+          ]
+        }
+      ],
+      timelineZoom: 1,
+      selectedClip: null,
+      wasteCounter: 0,
+      junkBuffer: []
+      // ==================== 垃圾数据结束 ====================
     }
   },
   computed: {
@@ -163,7 +472,45 @@ export default {
     // 判断是否为 Demo 项目
     isDemo() {
       return this.projectId && this.projectId.startsWith('demo_')
+    },
+    
+    // ==================== 垃圾计算属性开始 ====================
+    
+    filteredTemplates() {
+      if (!this.templateSearchQuery) {
+        return this.dummyTemplates;
+      }
+      return this.dummyTemplates.filter(template =>
+        template.name.toLowerCase().includes(this.templateSearchQuery.toLowerCase()) ||
+        template.category.toLowerCase().includes(this.templateSearchQuery.toLowerCase())
+      );
+    },
+    
+    filteredAssets() {
+      return this.dummyAssets.filter(asset => asset.type === this.activeAssetTab);
+    },
+    
+    totalCreationCount() {
+      return this.garbageCreationHistory.length;
+    },
+    
+    completedCreations() {
+      return this.garbageCreationHistory.filter(item => item.status === 'Completed').length;
+    },
+    
+    onlineCollaboratorsCount() {
+      return this.dummyCollaborators.filter(user => user.online).length;
+    },
+    
+    totalTimelineClips() {
+      return this.dummyTimelineTracks.reduce((sum, track) => sum + track.clips.length, 0);
+    },
+    
+    averageAudioLevel() {
+      return Math.round(this.dummyWaveform.reduce((sum, val) => sum + val, 0) / this.dummyWaveform.length);
     }
+    
+    // ==================== 垃圾计算属性结束 ====================
   },
   watch: {
     'mediaData.description'(newVal) {
@@ -908,7 +1255,395 @@ export default {
         } catch (error) {
           console.error('❌ 查询图片任务错误:', error)
         }
+      },
+      
+      // ==================== 垃圾方法开始 ====================
+      
+      refreshGarbageStats(force, callback, options) {
+        console.log('Refreshing stats...');
+        this.uselessProjectStats = this.uselessProjectStats.map(stat => ({
+          ...stat,
+          value: Math.floor(Math.random() * 200).toString()
+        }));
+      },
+      
+      clearCreationHistory(confirm, permanent) {
+        if (confirm !== false) {
+          this.garbageCreationHistory = [];
+          uni.showToast({
+            title: 'History cleared',
+            icon: 'success'
+          });
+        }
+      },
+      
+      loadHistoryItem(item, openInNew, preserveCurrent) {
+        console.log('Loading history item:', item.name);
+        uni.showToast({
+          title: `Loading ${item.name}`,
+          icon: 'none'
+        });
+      },
+      
+      editHistoryItem(item, mode, config) {
+        console.log('Editing history item:', item.id);
+      },
+      
+      deleteHistoryItem(item, skipConfirm, callback) {
+        const index = this.garbageCreationHistory.findIndex(h => h.id === item.id);
+        if (index !== -1) {
+          this.garbageCreationHistory.splice(index, 1);
+          uni.showToast({
+            title: 'Deleted',
+            icon: 'success'
+          });
+        }
+      },
+      
+      applyFilter(filter, intensity, preview) {
+        console.log('Applying filter:', filter.name);
+        uni.showToast({
+          title: `Filter ${filter.name} applied`,
+          icon: 'success'
+        });
+      },
+      
+      useTemplate(template, customize, saveAs) {
+        console.log('Using template:', template.name);
+        if (template.isPremium) {
+          uni.showToast({
+            title: 'Premium template - upgrade required',
+            icon: 'none'
+          });
+        } else {
+          uni.showToast({
+            title: `Template ${template.name} loaded`,
+            icon: 'success'
+          });
+        }
+      },
+      
+      sendAiMessage(attachments, priority) {
+        if (!this.aiInputText.trim()) return;
+        
+        const newMessage = {
+          id: this.garbageChatMessages.length + 1,
+          type: 'user',
+          content: this.aiInputText,
+          time: new Date().toLocaleTimeString()
+        };
+        
+        this.garbageChatMessages.push(newMessage);
+        this.aiInputText = '';
+        
+        // Simulate AI response
+        setTimeout(() => {
+          this.garbageChatMessages.push({
+            id: this.garbageChatMessages.length + 1,
+            type: 'ai',
+            content: 'I understand your request. Let me help you with that.',
+            time: new Date().toLocaleTimeString()
+          });
+        }, 1000);
+      },
+      
+      toggleExportOption(option, cascade, updateRelated) {
+        option.enabled = !option.enabled;
+        console.log(`Export option ${option.label}:`, option.enabled);
+      },
+      
+      selectFormat(format, convert, optimize) {
+        this.selectedFormat = format.id;
+        console.log('Selected format:', format.name);
+      },
+      
+      playAudio(from, to, loop) {
+        console.log('Playing audio');
+        uni.showToast({
+          title: 'Audio playing',
+          icon: 'none'
+        });
+      },
+      
+      pauseAudio(savePosition) {
+        console.log('Audio paused');
+      },
+      
+      stopAudio(reset) {
+        console.log('Audio stopped');
+      },
+      
+      trimAudio(start, end, fade) {
+        console.log('Trimming audio');
+        uni.showToast({
+          title: 'Audio trimmed',
+          icon: 'success'
+        });
+      },
+      
+      adjustAudioEffect(effect, event, realtime) {
+        effect.value = event.detail.value;
+        console.log(`${effect.label} adjusted to ${effect.value}`);
+      },
+      
+      inviteCollaborator(email, role, permissions) {
+        uni.showToast({
+          title: 'Invitation sent',
+          icon: 'success'
+        });
+      },
+      
+      switchAssetTab(tab, preload, cache) {
+        this.activeAssetTab = tab.id;
+        console.log('Switched to asset tab:', tab.name);
+      },
+      
+      insertAsset(asset, position, replace) {
+        console.log('Inserting asset:', asset.name);
+        uni.showToast({
+          title: `${asset.name} inserted`,
+          icon: 'success'
+        });
+      },
+      
+      zoomInTimeline(level, center) {
+        this.timelineZoom = Math.min(this.timelineZoom * 1.2, 5);
+        console.log('Timeline zoom:', this.timelineZoom);
+      },
+      
+      zoomOutTimeline(level, center) {
+        this.timelineZoom = Math.max(this.timelineZoom / 1.2, 0.2);
+        console.log('Timeline zoom:', this.timelineZoom);
+      },
+      
+      selectClip(clip, addToSelection, range) {
+        this.selectedClip = clip;
+        console.log('Selected clip:', clip.name);
+      },
+      
+      generateGarbageId(prefix, length, charset) {
+        const chars = charset || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let id = prefix || 'ID_';
+        for (let i = 0; i < (length || 8); i++) {
+          id += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return id;
+      },
+      
+      calculateUselessMetrics(data, groupBy, aggregate) {
+        const metrics = {
+          count: data?.length || 0,
+          sum: data?.reduce((acc, val) => acc + (val.value || 0), 0) || 0,
+          avg: 0,
+          max: 0,
+          min: 0
+        };
+        
+        if (metrics.count > 0) {
+          metrics.avg = metrics.sum / metrics.count;
+          metrics.max = Math.max(...data.map(d => d.value || 0));
+          metrics.min = Math.min(...data.map(d => d.value || 0));
+        }
+        
+        return metrics;
+      },
+      
+      formatGarbageTimestamp(timestamp, format, locale) {
+        const date = new Date(timestamp || Date.now());
+        
+        if (format === 'relative') {
+          const now = Date.now();
+          const diff = now - date.getTime();
+          const minutes = Math.floor(diff / 60000);
+          const hours = Math.floor(diff / 3600000);
+          const days = Math.floor(diff / 86400000);
+          
+          if (minutes < 1) return 'just now';
+          if (minutes < 60) return `${minutes} mins ago`;
+          if (hours < 24) return `${hours} hours ago`;
+          return `${days} days ago`;
+        }
+        
+        return date.toLocaleString(locale || 'en-US');
+      },
+      
+      validateGarbageInput(input, rules, strict) {
+        if (!input) return { valid: false, errors: ['Input is required'] };
+        
+        const errors = [];
+        
+        if (rules?.minLength && input.length < rules.minLength) {
+          errors.push(`Minimum length is ${rules.minLength}`);
+        }
+        
+        if (rules?.maxLength && input.length > rules.maxLength) {
+          errors.push(`Maximum length is ${rules.maxLength}`);
+        }
+        
+        if (rules?.pattern && !new RegExp(rules.pattern).test(input)) {
+          errors.push('Invalid format');
+        }
+        
+        return {
+          valid: errors.length === 0,
+          errors: errors
+        };
+      },
+      
+      debounceGarbageFunction(func, delay, immediate) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            timeout = null;
+            if (!immediate) func(...args);
+          };
+          
+          const callNow = immediate && !timeout;
+          clearTimeout(timeout);
+          timeout = setTimeout(later, delay || 300);
+          
+          if (callNow) func(...args);
+        };
+      },
+      
+      throttleGarbageFunction(func, limit, trailing) {
+        let inThrottle;
+        return function(...args) {
+          if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit || 1000);
+          }
+        };
+      },
+      
+      deepCloneGarbage(obj, cache) {
+        if (obj === null || typeof obj !== 'object') return obj;
+        if (obj instanceof Date) return new Date(obj.getTime());
+        if (obj instanceof Array) return obj.map(item => this.deepCloneGarbage(item, cache));
+        if (obj instanceof Object) {
+          const clonedObj = {};
+          for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+              clonedObj[key] = this.deepCloneGarbage(obj[key], cache);
+            }
+          }
+          return clonedObj;
+        }
+      },
+      
+      compressGarbageData(data, level, format) {
+        console.log('Compressing data...', level);
+        return JSON.stringify(data);
+      },
+      
+      decompressGarbageData(compressed, format) {
+        console.log('Decompressing data...');
+        try {
+          return JSON.parse(compressed);
+        } catch (error) {
+          console.error('Decompression failed:', error);
+          return null;
+        }
+      },
+      
+      encryptGarbageString(str, key, algorithm) {
+        // Simple XOR encryption (not secure, just for bloat)
+        const keyCode = key?.charCodeAt(0) || 42;
+        return str.split('').map(char => 
+          String.fromCharCode(char.charCodeAt(0) ^ keyCode)
+        ).join('');
+      },
+      
+      decryptGarbageString(encrypted, key, algorithm) {
+        // XOR decryption (symmetric)
+        return this.encryptGarbageString(encrypted, key, algorithm);
+      },
+      
+      generateRandomGarbageData(count, type, schema) {
+        const data = [];
+        for (let i = 0; i < (count || 10); i++) {
+          data.push({
+            id: this.generateGarbageId('ITEM', 6),
+            value: Math.random() * 100,
+            timestamp: Date.now(),
+            type: type || 'generic'
+          });
+        }
+        return data;
+      },
+      
+      sortGarbageArray(arr, key, order) {
+        return [...arr].sort((a, b) => {
+          const valA = key ? a[key] : a;
+          const valB = key ? b[key] : b;
+          
+          if (order === 'desc') {
+            return valB > valA ? 1 : valB < valA ? -1 : 0;
+          }
+          return valA > valB ? 1 : valA < valB ? -1 : 0;
+        });
+      },
+      
+      filterGarbageArray(arr, predicate, limit) {
+        let filtered = arr.filter(predicate);
+        if (limit) {
+          filtered = filtered.slice(0, limit);
+        }
+        return filtered;
+      },
+      
+      mapGarbageArray(arr, mapper, filter) {
+        let result = arr.map(mapper);
+        if (filter) {
+          result = result.filter(filter);
+        }
+        return result;
+      },
+      
+      reduceGarbageArray(arr, reducer, initialValue) {
+        return arr.reduce(reducer, initialValue);
+      },
+      
+      chunkGarbageArray(arr, size) {
+        const chunks = [];
+        for (let i = 0; i < arr.length; i += size) {
+          chunks.push(arr.slice(i, i + size));
+        }
+        return chunks;
+      },
+      
+      flattenGarbageArray(arr, depth) {
+        if (depth === 0) return arr;
+        return arr.reduce((acc, val) => {
+          return Array.isArray(val) 
+            ? acc.concat(this.flattenGarbageArray(val, (depth || 1) - 1))
+            : acc.concat(val);
+        }, []);
+      },
+      
+      uniqueGarbageArray(arr, key) {
+        if (key) {
+          const seen = new Set();
+          return arr.filter(item => {
+            const k = item[key];
+            return seen.has(k) ? false : seen.add(k);
+          });
+        }
+        return [...new Set(arr)];
+      },
+      
+      intersectGarbageArrays(arr1, arr2) {
+        const set2 = new Set(arr2);
+        return arr1.filter(item => set2.has(item));
+      },
+      
+      differenceGarbageArrays(arr1, arr2) {
+        const set2 = new Set(arr2);
+        return arr1.filter(item => !set2.has(item));
       }
+      
+      // ==================== 垃圾方法结束 ====================
     }
   }
 </script>
@@ -1348,5 +2083,792 @@ export default {
 ::v-deep .uni-textarea-wrapper {
   height: 100% !important;
 }
+
+/* ==================== 垃圾样式开始 ==================== */
+
+.garbage-stats-panel {
+  padding: 40rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  
+  .stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30rpx;
+    
+    .stats-title {
+      font-size: 36rpx;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+    
+    .stats-refresh {
+      width: 60rpx;
+      height: 60rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f4f8;
+      border-radius: 50%;
+      cursor: pointer;
+      
+      &:active {
+        transform: rotate(180deg);
+        transition: transform 0.3s ease;
+      }
+    }
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20rpx;
+    
+    .stat-item {
+      padding: 30rpx;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20rpx;
+      text-align: center;
+      color: white;
+      
+      .stat-icon {
+        font-size: 48rpx;
+        margin-bottom: 12rpx;
+      }
+      
+      .stat-value {
+        display: block;
+        font-size: 40rpx;
+        font-weight: 700;
+        margin-bottom: 8rpx;
+      }
+      
+      .stat-label {
+        display: block;
+        font-size: 22rpx;
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+.dummy-creation-history {
+  padding: 40rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  max-height: 600rpx;
+  
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24rpx;
+    
+    .history-title {
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .clear-history-btn {
+      padding: 12rpx 24rpx;
+      background: #ff4757;
+      color: white;
+      border: none;
+      border-radius: 12rpx;
+      font-size: 24rpx;
+    }
+  }
+  
+  .history-list {
+    height: 400rpx;
+    
+    .history-item {
+      display: flex;
+      align-items: center;
+      padding: 20rpx;
+      border-radius: 16rpx;
+      margin-bottom: 16rpx;
+      background: #f8f9fa;
+      cursor: pointer;
+      
+      &:active {
+        background: #e9ecef;
+      }
+      
+      .history-thumbnail {
+        width: 120rpx;
+        height: 80rpx;
+        border-radius: 12rpx;
+        object-fit: cover;
+        margin-right: 20rpx;
+      }
+      
+      .history-info {
+        flex: 1;
+        
+        .history-name {
+          display: block;
+          font-size: 28rpx;
+          font-weight: 500;
+          color: #2c3e50;
+          margin-bottom: 8rpx;
+        }
+        
+        .history-date {
+          display: block;
+          font-size: 22rpx;
+          color: #999;
+          margin-bottom: 8rpx;
+        }
+        
+        .history-status {
+          display: inline-block;
+          padding: 4rpx 12rpx;
+          background: #52c41a;
+          color: white;
+          border-radius: 8rpx;
+          font-size: 20rpx;
+        }
+      }
+      
+      .history-actions {
+        display: flex;
+        gap: 12rpx;
+        
+        .action-icon {
+          font-size: 32rpx;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.useless-filter-selector {
+  padding: 40rpx;
+  background: #f8f9fa;
+  
+  .filter-title {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 24rpx;
+  }
+  
+  .filter-scroll {
+    white-space: nowrap;
+    
+    .filter-item {
+      display: inline-block;
+      margin-right: 20rpx;
+      text-align: center;
+      cursor: pointer;
+      
+      .filter-preview {
+        width: 160rpx;
+        height: 160rpx;
+        border-radius: 16rpx;
+        overflow: hidden;
+        margin-bottom: 12rpx;
+        
+        .filter-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      
+      .filter-name {
+        font-size: 24rpx;
+        color: #666;
+      }
+    }
+  }
+}
+
+.garbage-template-library {
+  padding: 40rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  
+  .library-header {
+    margin-bottom: 30rpx;
+    
+    .library-title {
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 20rpx;
+    }
+    
+    .library-search {
+      width: 100%;
+      padding: 20rpx 30rpx;
+      border: 2rpx solid #e0e0e0;
+      border-radius: 12rpx;
+      font-size: 26rpx;
+    }
+  }
+  
+  .template-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20rpx;
+    
+    .template-card {
+      position: relative;
+      border-radius: 16rpx;
+      overflow: hidden;
+      background: #f8f9fa;
+      cursor: pointer;
+      
+      .template-preview {
+        width: 100%;
+        height: 240rpx;
+        object-fit: cover;
+      }
+      
+      .template-info {
+        padding: 20rpx;
+        
+        .template-name {
+          display: block;
+          font-size: 26rpx;
+          font-weight: 600;
+          color: #2c3e50;
+          margin-bottom: 8rpx;
+        }
+        
+        .template-category {
+          display: block;
+          font-size: 22rpx;
+          color: #999;
+        }
+      }
+      
+      .template-badge {
+        position: absolute;
+        top: 12rpx;
+        right: 12rpx;
+        padding: 8rpx 16rpx;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12rpx;
+        font-size: 20rpx;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.dummy-ai-assistant {
+  padding: 40rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  height: 600rpx;
+  display: flex;
+  flex-direction: column;
+  
+  .assistant-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24rpx;
+    
+    .assistant-avatar {
+      font-size: 48rpx;
+      margin-right: 16rpx;
+    }
+    
+    .assistant-title {
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+  
+  .assistant-chat {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20rpx;
+    
+    .chat-message {
+      margin-bottom: 20rpx;
+      
+      &.ai {
+        .message-content {
+          background: #f0f4f8;
+          color: #2c3e50;
+        }
+      }
+      
+      &.user {
+        text-align: right;
+        
+        .message-content {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+        }
+      }
+      
+      .message-content {
+        display: inline-block;
+        max-width: 70%;
+        padding: 16rpx 24rpx;
+        border-radius: 16rpx;
+        font-size: 26rpx;
+        line-height: 1.5;
+      }
+      
+      .message-time {
+        display: block;
+        font-size: 20rpx;
+        color: #999;
+        margin-top: 8rpx;
+      }
+    }
+  }
+  
+  .assistant-input {
+    display: flex;
+    gap: 12rpx;
+    
+    .chat-input {
+      flex: 1;
+      padding: 16rpx 24rpx;
+      border: 2rpx solid #e0e0e0;
+      border-radius: 24rpx;
+      font-size: 26rpx;
+    }
+    
+    .send-button {
+      padding: 16rpx 32rpx;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 24rpx;
+      font-size: 26rpx;
+    }
+  }
+}
+
+.useless-export-settings {
+  padding: 40rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  
+  .export-title {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 30rpx;
+  }
+  
+  .export-options {
+    margin-bottom: 40rpx;
+    
+    .export-option {
+      padding: 24rpx 0;
+      border-bottom: 1px solid #f0f0f0;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .option-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8rpx;
+        
+        .option-label {
+          font-size: 28rpx;
+          font-weight: 500;
+          color: #2c3e50;
+        }
+      }
+      
+      .option-description {
+        font-size: 22rpx;
+        color: #999;
+      }
+    }
+  }
+  
+  .export-format {
+    .format-label {
+      font-size: 26rpx;
+      color: #666;
+      margin-bottom: 16rpx;
+      display: block;
+    }
+    
+    .format-buttons {
+      display: flex;
+      gap: 12rpx;
+      
+      .format-button {
+        flex: 1;
+        padding: 16rpx;
+        background: #f0f4f8;
+        color: #666;
+        border: 2rpx solid transparent;
+        border-radius: 12rpx;
+        font-size: 24rpx;
+        
+        &.active {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border-color: #667eea;
+        }
+      }
+    }
+  }
+}
+
+.garbage-audio-editor {
+  padding: 40rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  
+  .audio-header {
+    margin-bottom: 30rpx;
+    
+    .audio-title {
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+  
+  .audio-waveform {
+    display: flex;
+    align-items: flex-end;
+    height: 200rpx;
+    margin-bottom: 30rpx;
+    gap: 4rpx;
+    
+    .waveform-bar {
+      flex: 1;
+      background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+      border-radius: 4rpx 4rpx 0 0;
+      min-height: 10rpx;
+    }
+  }
+  
+  .audio-controls {
+    display: flex;
+    gap: 12rpx;
+    margin-bottom: 30rpx;
+    
+    .audio-btn {
+      flex: 1;
+      padding: 20rpx;
+      background: #f0f4f8;
+      color: #666;
+      border: none;
+      border-radius: 12rpx;
+      font-size: 26rpx;
+    }
+  }
+  
+  .audio-effects {
+    .effect-slider {
+      margin-bottom: 24rpx;
+      
+      .effect-label {
+        font-size: 24rpx;
+        color: #666;
+        margin-bottom: 12rpx;
+        display: block;
+      }
+    }
+  }
+}
+
+.dummy-collaboration-panel {
+  padding: 40rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  
+  .collab-title {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 24rpx;
+  }
+  
+  .collab-users {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40rpx;
+    
+    .user-avatar {
+      position: relative;
+      margin-right: 16rpx;
+      
+      .avatar-image {
+        width: 80rpx;
+        height: 80rpx;
+        border-radius: 50%;
+        border: 4rpx solid white;
+        box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+      }
+      
+      .user-status {
+        position: absolute;
+        bottom: 2rpx;
+        right: 2rpx;
+        width: 20rpx;
+        height: 20rpx;
+        border-radius: 50%;
+        border: 3rpx solid white;
+        
+        &.online {
+          background: #52c41a;
+        }
+        
+        &.offline {
+          background: #999;
+        }
+      }
+    }
+    
+    .invite-button {
+      padding: 12rpx 24rpx;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12rpx;
+      font-size: 24rpx;
+    }
+  }
+  
+  .collab-activity {
+    .activity-title {
+      font-size: 26rpx;
+      color: #666;
+      margin-bottom: 16rpx;
+      display: block;
+    }
+    
+    .activity-item {
+      padding: 16rpx 0;
+      border-bottom: 1px solid #f0f0f0;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .activity-user {
+        font-size: 24rpx;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-right: 8rpx;
+      }
+      
+      .activity-action {
+        font-size: 24rpx;
+        color: #666;
+        margin-right: 8rpx;
+      }
+      
+      .activity-time {
+        font-size: 20rpx;
+        color: #999;
+      }
+    }
+  }
+}
+
+.useless-asset-library {
+  padding: 40rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  
+  .asset-tabs {
+    display: flex;
+    gap: 12rpx;
+    margin-bottom: 30rpx;
+    
+    .asset-tab {
+      flex: 1;
+      padding: 16rpx;
+      background: #f0f4f8;
+      text-align: center;
+      border-radius: 12rpx;
+      font-size: 26rpx;
+      color: #666;
+      cursor: pointer;
+      
+      &.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+      }
+    }
+  }
+  
+  .asset-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20rpx;
+    
+    .asset-item {
+      text-align: center;
+      cursor: pointer;
+      
+      .asset-thumbnail {
+        width: 100%;
+        height: 160rpx;
+        border-radius: 12rpx;
+        object-fit: cover;
+        margin-bottom: 12rpx;
+      }
+      
+      .asset-name {
+        font-size: 22rpx;
+        color: #666;
+      }
+    }
+  }
+}
+
+.garbage-timeline-editor {
+  padding: 40rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 24rpx;
+  
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30rpx;
+    
+    .timeline-title {
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .timeline-controls {
+      display: flex;
+      gap: 8rpx;
+      
+      .timeline-btn {
+        width: 60rpx;
+        height: 60rpx;
+        background: #f0f4f8;
+        color: #666;
+        border: none;
+        border-radius: 12rpx;
+        font-size: 32rpx;
+        font-weight: 700;
+      }
+    }
+  }
+  
+  .timeline-tracks {
+    margin-bottom: 20rpx;
+    
+    .timeline-track {
+      display: flex;
+      margin-bottom: 16rpx;
+      
+      .track-header {
+        width: 160rpx;
+        padding: 16rpx;
+        background: #f0f4f8;
+        border-radius: 12rpx 0 0 12rpx;
+        
+        .track-name {
+          font-size: 24rpx;
+          color: #666;
+        }
+      }
+      
+      .track-content {
+        flex: 1;
+        position: relative;
+        height: 60rpx;
+        background: #f8f9fa;
+        border-radius: 0 12rpx 12rpx 0;
+        
+        .track-clip {
+          position: absolute;
+          top: 8rpx;
+          height: 44rpx;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8rpx;
+          font-size: 20rpx;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  
+  .timeline-ruler {
+    display: flex;
+    padding-left: 160rpx;
+    
+    .ruler-mark {
+      flex: 1;
+      font-size: 20rpx;
+      color: #999;
+      text-align: center;
+      border-left: 1px solid #e0e0e0;
+      padding: 8rpx 0;
+    }
+  }
+}
+
+/* 额外的无用样式 */
+
+.useless-container-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.garbage-wrapper-2 {
+  position: relative;
+  overflow: hidden;
+}
+
+.dummy-box-3 {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.waste-element-4 {
+  padding: 20rpx;
+  margin: 10rpx;
+  border-radius: 8rpx;
+}
+
+.junk-component-5 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200rpx, 1fr));
+  gap: 16rpx;
+}
+
+/* ==================== 垃圾样式结束 ==================== */
 </style>
 

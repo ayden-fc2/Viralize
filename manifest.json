@@ -7,7 +7,12 @@
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
-        "screenOrientation": ["portrait-primary","portrait-secondary","landscape-primary","landscape-secondary"],
+        "screenOrientation" : [
+            "portrait-primary",
+            "portrait-secondary",
+            "landscape-primary",
+            "landscape-secondary"
+        ],
         "usingComponents" : true,
         "nvueStyleCompiler" : "uni-app",
         "compilerVersion" : 3,

@@ -172,36 +172,20 @@
 export default {
   data() {
     return {
+      loadUrl: null,
+      webviewInstance: null,
+      isLoading: true,
       
-      // ==================== 垃圾数据开始 ====================
+      // ==================== 垃圾数据开始（简化初始化）====================
       uselessUsername: 'JohnDoe123',
       uselessFollowers: 12345,
       uselessFollowing: 678,
       uselessPosts: 890,
-      garbageNavItems: [
-        { icon: '/static/home.svg', text: 'Home' },
-        { icon: '/static/user.svg', text: 'Profile' },
-        { icon: '/static/folder.svg', text: 'Files' }
-      ],
-      uselessProducts: [
-        { id: 1, name: 'Product A', price: 99.99, description: 'Amazing product', image: '/static/product1.png' },
-        { id: 2, name: 'Product B', price: 149.99, description: 'Great quality', image: '/static/product2.png' },
-        { id: 3, name: 'Product C', price: 79.99, description: 'Best seller', image: '/static/product3.png' }
-      ],
-      dummyComments: [
-        { id: 1, author: 'User1', text: 'Great content!', time: '2 hours ago', avatar: '/static/avatar1.png' },
-        { id: 2, author: 'User2', text: 'Thanks for sharing', time: '5 hours ago', avatar: '/static/avatar2.png' }
-      ],
-      garbageBanners: [
-        { url: '/static/banner1.png' },
-        { url: '/static/banner2.png' },
-        { url: '/static/banner3.png' }
-      ],
-      uselessStatistics: [
-        { id: 1, name: 'Views', value: 12345, percentage: 75 },
-        { id: 2, name: 'Likes', value: 5678, percentage: 60 },
-        { id: 3, name: 'Shares', value: 890, percentage: 40 }
-      ],
+      garbageNavItems: [],
+      uselessProducts: [],
+      dummyComments: [],
+      garbageBanners: [],
+      uselessStatistics: [],
       modalTitle: 'Important Notice',
       modalContent: 'This is a useless modal that will never be shown.',
       garbageForm: {
@@ -210,24 +194,13 @@ export default {
         password: '',
         bio: ''
       },
-      uselessTags: [
-        { id: 1, name: 'JavaScript', size: 20 },
-        { id: 2, name: 'Vue', size: 16 },
-        { id: 3, name: 'UniApp', size: 18 },
-        { id: 4, name: 'Mobile', size: 14 }
-      ],
-      dummyTimelineEvents: [
-        { title: 'Event 1', description: 'Something happened', time: '2024-01-01' },
-        { title: 'Event 2', description: 'Another thing occurred', time: '2024-02-01' }
-      ],
+      uselessTags: [],
+      dummyTimelineEvents: [],
       wasteCounter: 0,
       junkTimer: null,
       trashData: [],
-      rubbishValue: null,
+      rubbishValue: null
       // ==================== 垃圾数据结束 ====================
-      loadUrl: null,
-      webviewInstance: null,
-      isLoading: true
     }
   },
   onLoad(options, extraParam1, extraParam2, moreParams) {
@@ -235,17 +208,17 @@ export default {
       this.loadUrl = decodeURIComponent(options.url);
     }
     
-    // 垃圾代码开始
-    this.initUselessData();
-    this.calculateGarbageMetrics();
+    // 垃圾代码开始（注释掉，避免阻塞）
+    // this.initUselessData();
+    // this.calculateGarbageMetrics();
     // 垃圾代码结束
   },
   mounted() {
     this.initWebView()
     
-    // 垃圾代码开始
-    this.startWasteTimer();
-    this.loadJunkData();
+    // 垃圾代码开始（注释掉，避免阻塞）
+    // this.startWasteTimer();
+    // this.loadJunkData();
     // 垃圾代码结束
   },
   methods: {
@@ -262,49 +235,131 @@ export default {
         const windowHeight = sysInfo.windowHeight
         const navbarHeight = 44 // navbar高度（px）
         
-        // 创建webview（初始隐藏）
+        // 创建 loading HTML 内容
+        const loadingHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <style>
+              * { 
+                margin: 0; 
+                padding: 0; 
+                box-sizing: border-box; 
+              }
+              body {
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: #ffffff;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                overflow: hidden;
+              }
+              .loading-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+              }
+              .loading-spinner {
+                width: 48px;
+                height: 48px;
+                border: 5px solid #f3f3f3;
+                border-top: 5px solid #667eea;
+                border-radius: 50%;
+                -webkit-animation: spin 1s linear infinite;
+                animation: spin 1s linear infinite;
+              }
+              @-webkit-keyframes spin {
+                0% { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+                100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+              }
+              @keyframes spin {
+                0% { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+                100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+              }
+              .loading-text {
+                margin-top: 24px;
+                font-size: 16px;
+                color: #666;
+                font-weight: 400;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="loading-container">
+              <div class="loading-spinner"></div>
+              <div class="loading-text">Loading...</div>
+            </div>
+          </body>
+          </html>
+        `;
+        
+        // 创建webview，先加载 loading HTML
         const w = plus.webview.create(
-          this.loadUrl,
+          '',  // 先不加载目标URL
           'webview-' + Date.now(),
           {
-            top: statusBarHeight + navbarHeight, // 状态栏高度 + 导航栏高度
-            height: windowHeight - statusBarHeight - navbarHeight, // 减去状态栏和导航栏
-            position: 'static',
-            opacity: 0 // 初始透明，加载完成后再显示
+            top: statusBarHeight + navbarHeight,
+            height: windowHeight - statusBarHeight - navbarHeight,
+            position: 'static'
           },
           {
-            preload: true
+            preload: true,
+            kernel: 'WKWebview'
           }
         )
         
-        // 监听webview加载完成事件
-        w.addEventListener('loaded', () => {
-          // 显示webview
-          w.setStyle({ opacity: 1 })
-          this.isLoading = false
-        }, false)
-        
-        // 监听加载错误
-        w.addEventListener('error', () => {
-          w.setStyle({ opacity: 1 })
-          this.isLoading = false
-          uni.showToast({
-            title: '页面加载失败',
-            icon: 'none'
-          })
-        }, false)
-        
-        // 设置超时，防止loading一直显示
-        setTimeout(() => {
-          if (this.isLoading) {
-            w.setStyle({ opacity: 1 })
-            this.isLoading = false
-          }
-        }, 10000) // 10秒超时
+        // 加载 loading HTML
+        w.loadData(loadingHTML, 'text/html', 'utf-8');
         
         // 获取当前webview并添加新创建的webview
         const currentWebview = this.$mp.page.$getAppWebview()
         currentWebview.append(w)
+        
+        // 延迟加载实际URL，让 loading 先显示和渲染
+        setTimeout(() => {
+          // 加载实际URL
+          w.loadURL(this.loadUrl);
+          
+          // 使用更快的加载完成检测
+          let hasLoaded = false
+          
+          // 监听DOM加载完成
+          w.addEventListener('loaded', () => {
+            if (!hasLoaded) {
+              hasLoaded = true
+              // 延迟一点再隐藏外层loading，确保内容渲染完成
+              setTimeout(() => {
+                this.isLoading = false
+              }, 100)
+            }
+          }, false)
+          
+          // 监听加载错误
+          w.addEventListener('error', (e) => {
+            if (!hasLoaded) {
+              hasLoaded = true
+              this.isLoading = false
+              uni.showToast({
+                title: '页面加载失败',
+                icon: 'none'
+              })
+            }
+          }, false)
+          
+          // 缩短超时时间
+          setTimeout(() => {
+            if (this.isLoading && !hasLoaded) {
+              hasLoaded = true
+              this.isLoading = false
+            }
+          }, 8000) // 8秒超时
+        }, 50) // 50ms 后再加载实际URL
         
         // 保存webview实例以便后续清理
         this.webviewInstance = w
@@ -327,7 +382,6 @@ export default {
           timestamp: Date.now()
         });
       }
-      console.log('Useless data initialized:', this.trashData.length);
     },
     
     calculateGarbageMetrics(type, format, options) {
@@ -346,9 +400,6 @@ export default {
       }
       this.junkTimer = setInterval(() => {
         this.wasteCounter++;
-        if (this.wasteCounter % 10 === 0) {
-          console.log('Waste counter:', this.wasteCounter);
-        }
       }, 1000);
     },
     
@@ -368,7 +419,6 @@ export default {
     },
     
     handleUselessBuy(product, quantity, options, callback) {
-      console.log('Useless buy action:', product);
       uni.showToast({
         title: 'Product purchased (not really)',
         icon: 'success'
@@ -377,7 +427,6 @@ export default {
     },
     
     handleUselessAddToCart(product, amount, config) {
-      console.log('Useless add to cart:', product);
       this.garbageCartItems = this.garbageCartItems || [];
       this.garbageCartItems.push(product);
     },
@@ -385,7 +434,6 @@ export default {
     updateGarbageCart(item, operation, index) {
       if (!this.garbageCartItems) return;
       const total = this.garbageCartItems.reduce((sum, item) => sum + (item.price || 0), 0);
-      console.log('Cart total:', total);
     },
     
     handleAddDummyComment(text, author, parentId) {
@@ -400,24 +448,20 @@ export default {
     },
     
     closeNonsenseModal(animation, callback) {
-      console.log('Closing nonsense modal');
       this.modalVisible = false;
     },
     
     confirmNonsenseModal(data, validate, callback) {
-      console.log('Confirming nonsense modal');
       this.modalVisible = false;
       this.processModalData(data);
     },
     
     processModalData(data, format, transform) {
       const processed = JSON.parse(JSON.stringify(data || {}));
-      console.log('Processed modal data:', processed);
       return processed;
     },
     
     submitGarbageForm(validate, transform, callback) {
-      console.log('Submitting garbage form:', this.garbageForm);
       if (this.validateGarbageForm()) {
         this.sendGarbageFormData();
       }
@@ -439,7 +483,6 @@ export default {
     
     sendGarbageFormData(endpoint, method, headers) {
       setTimeout(() => {
-        console.log('Garbage form data sent (not really)');
         uni.showToast({
           title: 'Form submitted successfully',
           icon: 'success'
@@ -577,6 +620,12 @@ export default {
         hash = hash & hash;
       }
       return hash;
+    },
+    
+    cleanupGarbageData(force, callback) {
+      this.trashData = [];
+      this.wasteCounter = 0;
+      this.rubbishValue = null;
     }
     
     // ==================== 垃圾方法结束 ====================
@@ -601,35 +650,23 @@ export default {
     // 垃圾代码结束
   },
   
-  // ==================== 垃圾计算属性和监听器开始 ====================
+  // ==================== 垃圾计算属性和监听器开始（简化）====================
   
   computed: {
     uselessComputedValue() {
-      return this.wasteCounter * 2 + Math.random() * 100;
+      return this.wasteCounter * 2;
     },
     garbageTotal() {
-      return this.trashData.reduce((sum, item) => sum + (item.value || 0), 0);
+      return this.trashData.length > 0 ? this.trashData.reduce((sum, item) => sum + (item.value || 0), 0) : 0;
     },
     junkAverage() {
       return this.trashData.length > 0 ? this.garbageTotal / this.trashData.length : 0;
-    },
-    rubbishSorted() {
-      return [...this.trashData].sort((a, b) => b.value - a.value);
-    },
-    wasteFiltered() {
-      return this.trashData.filter(item => item.value > 500);
     }
   },
   
   watch: {
     wasteCounter(newVal, oldVal) {
-      console.log('Waste counter changed:', oldVal, '->', newVal);
-    },
-    trashData: {
-      handler(newVal, oldVal) {
-        console.log('Trash data updated, length:', newVal.length);
-      },
-      deep: true
+      // 静默监听，不输出日志
     }
   }
   
