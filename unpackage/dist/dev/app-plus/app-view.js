@@ -8923,6 +8923,8 @@ try {
     uStatusBar:
       __webpack_require__(/*! @/uni_modules/uview-ui/components/u-status-bar/u-status-bar.vue */ 17)
         .default,
+    uNavbar: __webpack_require__(/*! @/uni_modules/uview-ui/components/u-navbar/u-navbar.vue */ 212)
+      .default,
     uSafeBottom:
       __webpack_require__(/*! @/uni_modules/uview-ui/components/u-safe-bottom/u-safe-bottom.vue */ 28)
         .default,
@@ -8953,23 +8955,28 @@ var render = function () {
     { staticClass: _vm._$g(0, "sc"), attrs: { _i: 0 } },
     [
       _c("u-status-bar", { attrs: { _i: 1 } }),
-      _c("uni-view", { ref: "webviewContainer", attrs: { _i: 2 } }),
-      _vm._$g(3, "i")
+      _c("u-navbar", { attrs: { _i: 2 } }),
+      _c("uni-view", {
+        ref: "webviewContainer",
+        staticClass: _vm._$g(3, "sc"),
+        attrs: { _i: 3 },
+      }),
+      _vm._$g(4, "i")
         ? _c(
             "uni-view",
-            { staticClass: _vm._$g(3, "sc"), attrs: { _i: 3 } },
+            { staticClass: _vm._$g(4, "sc"), attrs: { _i: 4 } },
             [
-              _c("u-loading", { attrs: { _i: 4 } }),
+              _c("u-loading", { attrs: { _i: 5 } }),
               _c(
                 "v-uni-text",
-                { staticClass: _vm._$g(5, "sc"), attrs: { _i: 5 } },
+                { staticClass: _vm._$g(6, "sc"), attrs: { _i: 6 } },
                 [_vm._v("loading...")]
               ),
             ],
             1
           )
         : _vm._e(),
-      _c("u-safe-bottom", { attrs: { _i: 6 } }),
+      _c("u-safe-bottom", { attrs: { _i: 7 } }),
     ],
     1
   )
@@ -9068,7 +9075,7 @@ if(false) {}
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../../../../../Applications/HBuilderX.app/Contents/HBuilderX/plugins/uniapp-cli/node_modules/css-loader/dist/runtime/api.js */ 10);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "@charset \"UTF-8\";\n/**\n * 这里是uni-app内置的常用样式变量\n *\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\n *\n */\n/**\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\n *\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\n */\n/* 颜色变量 - Viralize 浅色主题 */\n/* 品牌主色 - 优雅的蓝紫色 */\n/* 行为相关颜色 */\n/* 文字基本颜色 - 浅色主题 */\n/* 背景颜色 - 浅色主题 */\n/* 边框颜色 */\n/* 尺寸变量 */\n/* 文字尺寸 */\n/* 图片尺寸 */\n/* Border Radius */\n/* 水平间距 */\n/* 垂直间距 */\n/* 透明度 */\n/* 阴影 */\n/* 文章场景相关 */\n.page[data-v-16edd14a] {\n  position: relative;\n  width: 100%;\n  height: 100vh;\n  background-color: #fff;\n}\n.loading-container[data-v-16edd14a] {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  background-color: #fff;\n  z-index: 9999;\n}\n.loading-container .loading-text[data-v-16edd14a] {\n  margin-top: 20rpx;\n  font-size: 28rpx;\n  color: #666;\n}", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\n/**\n * 这里是uni-app内置的常用样式变量\n *\n * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量\n * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App\n *\n */\n/**\n * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能\n *\n * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件\n */\n/* 颜色变量 - Viralize 浅色主题 */\n/* 品牌主色 - 优雅的蓝紫色 */\n/* 行为相关颜色 */\n/* 文字基本颜色 - 浅色主题 */\n/* 背景颜色 - 浅色主题 */\n/* 边框颜色 */\n/* 尺寸变量 */\n/* 文字尺寸 */\n/* 图片尺寸 */\n/* Border Radius */\n/* 水平间距 */\n/* 垂直间距 */\n/* 透明度 */\n/* 阴影 */\n/* 文章场景相关 */\n.page[data-v-16edd14a] {\n  position: relative;\n  width: 100%;\n  height: 100vh;\n  background-color: #fff;\n}\n.webview-container[data-v-16edd14a] {\n  width: 100%;\n  flex: 1;\n}\n.loading-container[data-v-16edd14a] {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  background-color: #fff;\n  z-index: 9999;\n}\n.loading-container .loading-text[data-v-16edd14a] {\n  margin-top: 20rpx;\n  font-size: 28rpx;\n  color: #666;\n}", ""]);
 // Exports
 module.exports = exports;
 

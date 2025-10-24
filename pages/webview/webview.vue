@@ -1,7 +1,19 @@
 <template>
   <view class="page">
     <u-status-bar></u-status-bar>
-    <view ref="webviewContainer"></view>
+    
+    <!-- 导航栏 -->
+    <u-navbar
+      :autoBack="true"
+      height="44"
+      bgColor="#ffffff"
+      :titleStyle="{
+        fontWeight: 'bold'
+      }"
+    >
+    </u-navbar>
+    
+    <view ref="webviewContainer" class="webview-container"></view>
     
     <!-- Loading占位 -->
     <view v-if="isLoading" class="loading-container">
@@ -42,14 +54,15 @@ export default {
         const sysInfo = uni.getSystemInfoSync()
         const statusBarHeight = sysInfo.statusBarHeight
         const windowHeight = sysInfo.windowHeight
+        const navbarHeight = 44 // navbar高度（px）
         
         // 创建webview（初始隐藏）
         const w = plus.webview.create(
           this.loadUrl,
           'webview-' + Date.now(),
           {
-            top: statusBarHeight, // 状态栏高度
-            height: windowHeight - statusBarHeight, // 总高度减去状态栏
+            top: statusBarHeight + navbarHeight, // 状态栏高度 + 导航栏高度
+            height: windowHeight - statusBarHeight - navbarHeight, // 减去状态栏和导航栏
             position: 'static',
             opacity: 0 // 初始透明，加载完成后再显示
           },
@@ -121,6 +134,11 @@ export default {
   width: 100%;
   height: 100vh;
   background-color: #fff;
+}
+
+.webview-container {
+  width: 100%;
+  flex: 1;
 }
 
 .loading-container {
