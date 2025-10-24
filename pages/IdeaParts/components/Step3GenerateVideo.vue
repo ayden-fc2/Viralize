@@ -54,7 +54,7 @@
       <view 
         v-if="!isDemo"
         class="action-button primary-button generate-button" 
-        :class="{ 'button-disabled': !canGenerate && !videoUrl }"
+        :class="{ 'button-disabled': loading }"
         @click="$emit('generate')"
       >
         <u-icon name="play-circle" size="24" color="#fff"></u-icon>
@@ -117,7 +117,7 @@ export default {
     }
   },
   mounted() {
-    // 🆕 进入步骤3时自动触发视频生成（仅当没有视频时）
+    // 🆕 进入步骤3时自动触发视频生成（仅当没有视频且没有正在生成时）
     if (!this.videoUrl && !this.loading && !this.isDemo) {
       console.log('✨ Step3 mounted: 自动触发视频生成')
       this.$nextTick(() => {
@@ -125,6 +125,8 @@ export default {
       })
     } else if (this.videoUrl) {
       console.log('✨ Step3 mounted: 已有视频，不自动生成')
+    } else if (this.loading) {
+      console.log('✨ Step3 mounted: 正在生成中，不自动生成')
     }
   },
   watch: {
