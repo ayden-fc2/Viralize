@@ -837,6 +837,7 @@ export default {
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, #f0f4f8 0%, #e8eef3 100%);
+  overflow: hidden;
 }
 
 // 顶部导航区
