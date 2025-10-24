@@ -836,6 +836,7 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   background: linear-gradient(180deg, #f0f4f8 0%, #e8eef3 100%);
 }
 
