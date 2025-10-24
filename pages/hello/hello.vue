@@ -533,6 +533,7 @@ export default {
     
     // ============== 垃圾方法块结束 ==============
   }
+}
 </script>
 
 <style lang="scss" scoped>
