@@ -17,6 +17,13 @@
         </swiper-item>
         
         <swiper-item @touchmove.stop.prevent>
+          <view class="tab-content">
+            <u-status-bar></u-status-bar>
+            <message-tab></message-tab>
+          </view>
+        </swiper-item>
+        
+        <swiper-item @touchmove.stop.prevent>
           <view class="tab-content-mine">
             <u-status-bar></u-status-bar>
             <mine-tab></mine-tab>
@@ -25,7 +32,7 @@
       </swiper>
     </view>
     
-    <view>
+    <view v-show="showTabbar">
       <u-tabbar 
         :value="currentTabIndex" 
         :placeholder="false"
@@ -51,15 +58,13 @@
         
         <u-tabbar-item :text="$t('home.tab2')" @click="switchTabbar(1)">
           <image
-            class="tab-icon"
-            :class="currentTabIndex === 1 ? 'tab-icon-active' : 'tab-icon-inactive'"
+            class="tab-icon tab-icon-active"
             mode="aspectFit"
             slot="active-icon"
             src="/static/community-fill.svg"
           ></image>
           <image
-            class="tab-icon"
-            :class="currentTabIndex === 1 ? 'tab-icon-active' : 'tab-icon-inactive'"
+            class="tab-icon tab-icon-inactive"
             mode="aspectFit"
             slot="inactive-icon"
             src="/static/community.svg"
@@ -72,20 +77,37 @@
             :class="currentTabIndex === 2 ? 'tab-icon-active' : 'tab-icon-inactive'"
             mode="aspectFit"
             slot="active-icon"
-            src="/static/user-Fill.svg"
+            src="/static/email-fill.svg"
           ></image>
           <image
             class="tab-icon"
             :class="currentTabIndex === 2 ? 'tab-icon-active' : 'tab-icon-inactive'"
             mode="aspectFit"
             slot="inactive-icon"
+            src="/static/email.svg"
+          ></image>
+        </u-tabbar-item>
+        
+        <u-tabbar-item :text="$t('home.tab4')" @click="switchTabbar(3)">
+          <image
+            class="tab-icon"
+            :class="currentTabIndex === 3 ? 'tab-icon-active' : 'tab-icon-inactive'"
+            mode="aspectFit"
+            slot="active-icon"
+            src="/static/user-Fill.svg"
+          ></image>
+          <image
+            class="tab-icon"
+            :class="currentTabIndex === 3 ? 'tab-icon-active' : 'tab-icon-inactive'"
+            mode="aspectFit"
+            slot="inactive-icon"
             src="/static/user.svg"
           ></image>
         </u-tabbar-item>
       </u-tabbar>
+      
+      <u-safe-bottom></u-safe-bottom>
     </view>
-    
-    <u-safe-bottom></u-safe-bottom>
   </view>
 </template>
 
@@ -93,12 +115,14 @@
 import { mapGetters } from 'vuex'
 import CreateTab from './tabs/create.vue'
 import ExploreTab from './tabs/explore.vue'
+import MessageTab from './tabs/message.vue'
 import MineTab from './tabs/mine.vue'
 
 export default {
   components: {
     CreateTab,
     ExploreTab,
+    MessageTab,
     MineTab
   },
   data() {
@@ -107,7 +131,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('user', ['token', 'isLoggedIn'])
+    ...mapGetters('user', ['token', 'isLoggedIn']),
+    ...mapGetters('ui', ['showTabbar'])
+  },
+  watch: {
+    showTabbar(val) {
+      console.log('🔄 showTabbar 变化:', val)
+    }
   },
   onLoad() {
     console.log('🏠 进入首页')

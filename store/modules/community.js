@@ -1,6 +1,24 @@
 import { getStorageStoredData } from '../utils/storeUtil'
 
 const STORAGE_KEY = 'viralize-community-'
+const DATA_VERSION = '1.0' // 数据版本号
+
+// 检查数据版本，如果版本不匹配则清除旧数据
+function checkAndClearOldData() {
+  const storedVersion = uni.getStorageSync(STORAGE_KEY + 'version')
+  if (storedVersion !== DATA_VERSION) {
+    console.log('🔄 检测到数据版本更新，清除旧数据')
+    uni.removeStorageSync(STORAGE_KEY + 'posts')
+    uni.removeStorageSync(STORAGE_KEY + 'comments')
+    uni.removeStorageSync(STORAGE_KEY + 'blockedUsers')
+    uni.removeStorageSync(STORAGE_KEY + 'reportedPosts')
+    uni.removeStorageSync(STORAGE_KEY + 'reportedComments')
+    uni.setStorageSync(STORAGE_KEY + 'version', DATA_VERSION)
+  }
+}
+
+// 在加载数据前检查版本
+checkAndClearOldData()
 
 // Initialize two official Viralize announcements
 const INITIAL_POSTS = [
@@ -9,38 +27,54 @@ const INITIAL_POSTS = [
     author: {
       id: 'user_viralize',
       name: 'Viralize',
-      avatar: 'https://via.placeholder.com/100/667eea/ffffff?text=V',
+      avatar: '',
       isOfficial: true
     },
     content: 'Welcome to Viralize Community! 🎉\n\nHere you can:\n• Share your creative works\n• Connect with other creators\n• Get the latest product updates\n• Join community events\n\nLet\'s create amazing content together!',
     images: [],
-    likes: 128,
-    comments: 15,
+    likes: 1,
+    comments: 0,
     isLiked: false,
-    createdAt: Date.now() - 7 * 24 * 60 * 60 * 1000, // 7 days ago
-    isPinned: true
+    createdAt: Date.now() - 7 * 24 * 60 * 60 * 1000 // 7 days ago
   },
   {
     id: 'post_official_002',
     author: {
       id: 'user_viralize',
       name: 'Viralize',
-      avatar: 'https://via.placeholder.com/100/667eea/ffffff?text=V',
+      avatar: '',
       isOfficial: true
     },
     content: '📢 Viralize v1.0 is now live!\n\nNew features:\n✨ AI Scene Generation\n✨ Smart Video Creation\n✨ Multi-language Support\n✨ Project Management\n\nThank you for your support and feedback!',
     images: [],
-    likes: 256,
-    comments: 32,
+    likes: 1,
+    comments: 1,
     isLiked: false,
-    createdAt: Date.now() - 3 * 24 * 60 * 60 * 1000, // 3 days ago
-    isPinned: true
+    createdAt: Date.now() - 3 * 24 * 60 * 60 * 1000 // 3 days ago
   }
 ]
 
+// 初始化评论数据
+const INITIAL_COMMENTS = {
+  'post_official_002': [
+    {
+      id: 'comment_official_001',
+      author: {
+        id: 'user_viralize',
+        name: 'Viralize',
+        avatar: ''
+      },
+      content: 'Thank you all for your support! We will keep working hard to bring you better features. 🚀',
+      createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000 // 2 days ago
+    }
+  ]
+}
+
 const state = {
+  // 当前用户 ID（实际项目中应该从用户认证模块获取）
+  currentUserId: 'user_current',
   posts: getStorageStoredData(STORAGE_KEY, 'posts') || INITIAL_POSTS,
-  comments: getStorageStoredData(STORAGE_KEY, 'comments') || {},
+  comments: getStorageStoredData(STORAGE_KEY, 'comments') || INITIAL_COMMENTS,
   blockedUsers: getStorageStoredData(STORAGE_KEY, 'blockedUsers') || [],
   reportedPosts: getStorageStoredData(STORAGE_KEY, 'reportedPosts') || [],
   reportedComments: getStorageStoredData(STORAGE_KEY, 'reportedComments') || []
@@ -141,8 +175,8 @@ const actions = {
       id: postId,
       author: {
         id: 'user_current',
-        name: 'Viralize 用户',
-        avatar: 'https://via.placeholder.com/100/8c9cb0/ffffff?text=U',
+        name: 'Viralize User',
+        avatar: '',
         isOfficial: false
       },
       content,
@@ -150,8 +184,7 @@ const actions = {
       likes: 0,
       comments: 0,
       isLiked: false,
-      createdAt: now,
-      isPinned: false
+      createdAt: now
     }
     
     commit('ADD_POST', newPost)
@@ -182,8 +215,8 @@ const actions = {
       id: commentId,
       author: {
         id: 'user_current',
-        name: 'Viralize 用户',
-        avatar: 'https://via.placeholder.com/100/8c9cb0/ffffff?text=U'
+        name: 'Viralize User',
+        avatar: ''
       },
       content,
       createdAt: now
@@ -229,16 +262,14 @@ const actions = {
 }
 
 const getters = {
+  // 获取当前用户 ID
+  currentUserId: state => state.currentUserId,
+  
   // 获取所有未被拉黑用户的帖子
   visiblePosts: state => {
     return state.posts
       .filter(post => !state.blockedUsers.includes(post.author.id))
-      .sort((a, b) => {
-        // 置顶帖子优先
-        if (a.isPinned && !b.isPinned) return -1
-        if (!a.isPinned && b.isPinned) return 1
-        return b.createdAt - a.createdAt
-      })
+      .sort((a, b) => b.createdAt - a.createdAt)
   },
   
   // 获取帖子的评论（过滤拉黑用户）
